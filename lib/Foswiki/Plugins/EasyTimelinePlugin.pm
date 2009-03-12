@@ -13,25 +13,16 @@
 #
 # =========================
 #
-# Each plugin is a package that may contain these functions:        VERSION:
-#
-#   initPlugin              ( $topic, $web, $user, $installWeb )    1.000
-#   commonTagsHandler       ( $text, $topic, $web )                 1.000
-#
-# =========================
-#
 # This plugin creates a png file by using the ploticus graph utility.
 # See http://meta.wikimedia.org/wiki/EasyTimeline for more information.
 
-package TWiki::Plugins::EasyTimelinePlugin;
+package Foswiki::Plugins::EasyTimelinePlugin;
 
 # =========================
 use vars qw(
   $web $topic $user $installWeb $VERSION $RELEASE $pluginName
-  $debug $exampleCfgVar $sandbox $isInitialized
+  $debug $exampleCfgVar
 );
-
-use vars qw( %TWikiCompatibility );
 
 # This should always be $Rev$ so that TWiki can determine the checked-in
 # status of the plugin. It is used by the build automation tools, so
@@ -53,8 +44,9 @@ my $HASH_CODE_LENGTH    = 32;
 my %hashed_math_strings = ();
 
 # Please update sandbox command string to fit your environment:
+# FIXME: should be in configure
 my $cmd =
-'/usr/bin/perl /home/httpd/twiki/tools/EasyTimeline.pl -i %INFILE|F% -m -P /usr/bin/ploticus -T %TMPDIR|F% -A /twiki/bin/view/%WEB|F%';
+'/usr/bin/perl /var/www/html/foswiki/foswiki01x00/core/tools/EasyTimeline.pl -i %INFILE|F% -m -P /usr/local/bin/pl -T %TMPDIR|F% -A /foswiki01x00/bin/view/%WEB|F%';
 
 my $tmpDir  = '/tmp/' . $pluginName . "$$";
 my $tmpFile = '/tmp/' . $pluginName . "$$" . '/' . $pluginName . "$$";
@@ -64,53 +56,27 @@ sub initPlugin {
     ( $topic, $web, $user, $installWeb ) = @_;
 
     # check for Plugins.pm versions
-    if ( $TWiki::Plugins::VERSION < 1 ) {
-        TWiki::Func::writeWarning(
+    if ( $Foswiki::Plugins::VERSION < 1 ) {
+        Foswiki::Func::writeWarning(
             "Version mismatch between $pluginName and Plugins.pm");
         return 0;
     }
 
     # Get plugin debug flag
-    $debug = TWiki::Func::getPreferencesFlag("\U$pluginName\E_DEBUG");
+    $debug = Foswiki::Func::getPreferencesFlag("\U$pluginName\E_DEBUG");
 
     # Plugin correctly initialized
-    TWiki::Func::writeDebug(
-        "- TWiki::Plugins::${pluginName}::initPlugin( $web.$topic ) is OK")
+    Foswiki::Func::writeDebug(
+        "- Foswiki::Plugins::${pluginName}::initPlugin( $web.$topic ) is OK")
       if $debug;
     return 1;
-}
-
-sub doInit {
-    return if $isInitialized;
-
-    unless ( defined &TWiki::Sandbox::new ) {
-        eval "use TWiki::Contrib::DakarContrib;";
-        $sandbox = new TWiki::Sandbox();
-    }
-    else {
-        $sandbox = $TWiki::sharedSandbox;
-    }
-
-    &writeDebug("called doInit");
-
-    # for getRegularExpression
-    if ( $TWiki::Plugins::VERSION < 1.020 ) {
-        eval 'use TWiki::Contrib::CairoContrib;';
-
-        #writeDebug("reading in CairoContrib");
-    }
-
-    &writeDebug("doInit( ) is OK");
-    $isInitialized = 1;
-
-    return '';
 }
 
 # =========================
 sub commonTagsHandler {
 ### my ( $text, $topic, $web ) = @_;   # do not uncomment, use $_[0], $_[1]... instead
 
-    TWiki::Func::writeDebug("- ${pluginName}::commonTagsHandler( $_[2].$_[1] )")
+    Foswiki::Func::writeDebug("- ${pluginName}::commonTagsHandler( $_[2].$_[1] )")
       if $debug;
 
     # This is the place to define customized tags and variables
@@ -122,11 +88,9 @@ sub commonTagsHandler {
 
 # =========================
 sub handleTimeline {
-    my $errMsg = &doInit();
-    return $errMsg if $errMsg;
 
     # Create topic directory "pub/$web/$topic" if needed
-    my $dir = TWiki::Func::getPubDir() . "/$web/$topic";
+    my $dir = Foswiki::Func::getPubDir() . "/$web/$topic";
     unless ( -e "$dir" ) {
         umask(002);
         mkpath( $dir, 0, 0755 )
@@ -162,7 +126,7 @@ sub handleTimeline {
         close OUTFILE;
 
         # create the png
-        my ( $output, $status ) = $sandbox->sysCommand(
+        my ( $output, $status ) = Foswiki::Sandbox->sysCommand(
             $cmd,
             INFILE => $tmpFile . '.txt',
             WEB    => $web,
@@ -170,12 +134,11 @@ sub handleTimeline {
         );
         &writeDebug("EasyTimelinePlugin: output $output status $status");
         if ($status) {
-
-            # errors existed so remove created files
+            
             my @errLines;
             cleanTmp($tmpDir) unless $debug;
-            return &showError( $status, $output,
-                $hashed_math_strings{"$hash_code"} );
+            
+            return Error( "Error when executing command. Maybe Ploticus is not installed? Status: $status; Output: $output; Text: <pre>" . $hashed_math_strings{$hash_code} . "</pre>" );
         }
         if ( -e "$tmpFile.err" ) {
 
@@ -189,7 +152,7 @@ sub handleTimeline {
 
         # Attach created png file to topic, but hide it pr. default.
         my @stats = stat "$tmpFile.png";
-        TWiki::Func::saveAttachment(
+        Foswiki::Func::saveAttachment(
             $web, $topic,
             "graph$hash_code.png",
             {
@@ -206,7 +169,7 @@ sub handleTimeline {
 
             # Attach created map file to topic, but hide it pr. default.
             my @stats = stat "$tmpFile.map";
-            TWiki::Func::saveAttachment(
+            Foswiki::Func::saveAttachment(
                 $web, $topic,
                 "graph$hash_code.map",
                 {
@@ -238,14 +201,14 @@ sub handleTimeline {
         $html = "<map name=\"${hash_code}\">$mapinfo</map>\n";
         $html .=
             "<img usemap=\"#${hash_code}\" src=\""
-          . TWiki::Func::getPubUrlPath()
+          . Foswiki::Func::getPubUrlPath()
           . "/$web/$topic/"
           . "graph${hash_code}.png\">\n";
     }
     else {
         $html =
             "<img src=\""
-          . TWiki::Func::getPubUrlPath()
+          . Foswiki::Func::getPubUrlPath()
           . "/$web/$topic/"
           . "graph${hash_code}.png\">\n";
     }
@@ -262,8 +225,12 @@ sub showError {
     return "<noautolink><font color=\"red\"><nop>EasyTimelinePlugin Error ($status): $output</font></noautolink>";
 }
 
+sub Error {
+    return "<noautolink><font color=\"red\"><nop>EasyTimelinePlugin Error: ".  shift . "</font></noautolink>";
+}
+
 sub writeDebug {
-    &TWiki::Func::writeDebug( "$pluginName - " . $_[0] ) if $debug;
+    &Foswiki::Func::writeDebug( "$pluginName - " . $_[0] ) if $debug;
 }
 
 sub cleanTmp {
@@ -293,7 +260,7 @@ sub cleanTmp {
 }
 
 sub logWarning {
-    TWiki::Func::writeWarning(@_);
+    Foswiki::Func::writeWarning(@_);
 }
 
 1;
