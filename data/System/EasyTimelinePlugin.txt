@@ -1,24 +1,31 @@
 %META:TOPICINFO{author="ProjectContributor" date="1145659803" format="1.0" version="1.1"}%
----+!! Easy Timeline Plugin 
+---+!! Easy Timeline Plugin
+<!--
+One line description, required for extensions repository catalog.
+   * Set SHORTDESCRIPTION = Generate graphical timeline diagrams from markup text
+-->
+%SHORTDESCRIPTION%
+
+%TOC%
 
 As the saying goes: a picture is worth a thousand words. This is certainly true for graphical timelines. A detailed listing of events and dates in tabular form may offer the reader a lot of specifics, but may fail to provide an overview, a grand perspective.
 
-This plugin allows one to use &lt;easytimeline> tags to generate a timeline on the fly. This plugin is equal in function to the [[http://meta.wikimedia.org/wiki/EasyTimeline][EasyTimeline Plugin for MediaWiki]], on which this is based.
+This plugin allows one to use %<nop>TIMELINE% tags to generate a timeline on the fly. This plugin is equal in function to the [[http://meta.wikimedia.org/wiki/EasyTimeline][EasyTimeline Plugin for MediaWiki]] by Erik Zachte, on which this is based.
 
 For first time users <nop>%TOPIC% may not seem that easy at all. As with all script languages it takes some getting used to. Also the syntax description may be a bit bewildering due to its sheer size. Fortunately many elements of the script language are optional.
 
 The 'Easy' in <nop>%TOPIC% conveys the message that once a timeline exists it is not that hard to understand, enhance or correct.
 
-Full syntax and markup description is available at http://infodisiac.com/Wikipedia/EasyTimeline/Syntax.htm (or in the full mirrored copy of the website that is shipped with the plugin).
+Full syntax and markup description is available at http://infodisiac.com/Wikipedia/EasyTimeline/Syntax.htm.
 
 %TOC%
 
 ---++ Syntax
 
 <verbatim>
-<easytimeline>
+%TIMELINE%
 Timeline markup
-</easytimeline>
+%ENDTIMELINE%
 </verbatim>
 
 ---++ Examples
@@ -37,7 +44,7 @@ Pre-rendered sample:
 <td>
 Plugin (if installed):
 
-<easytimeline>
+%TIMELINE%
 ImageSize = width:270 height:300
 PlotArea  = left:45 right:0 bottom:20 top:20
 AlignBars = early
@@ -62,12 +69,12 @@ PlotData=
   from:1968   till:1980 color:3  text:"1968-1980_[[Kristj�n Eldj�rn|Kristj�n Eldj�rn]]"
   from:1980   till:1996 color:4  text:"1980-1996_[[Vigd�s Finnbogad�ttir|Vigd�s Finnbogad�ttir]]"
   from:1996   till:end  color:5  text:"1996-_[[�lafur Ragnar Gr�msson|�lafur Ragnar Gr�msson]]"
-</easytimeline>
+%ENDTIMELINE%
 </td>
 <td>
 Verbatim:
 <verbatim>
-<easytimeline>
+%TIMELINE%
 ImageSize = width:270 height:300
 PlotArea  = left:45 right:0 bottom:20 top:20
 AlignBars = early
@@ -92,7 +99,7 @@ PlotData=
   from:1968  till:1980 color:3  text:"1968-1980_[[Kristj�n Eldj�rn|Kristj�n Eldj�rn]]"
   from:1980  till:1996 color:4  text:"1980-1996_[[Vigd�s Finnbogad�ttir|Vigd�s Finnbogad�ttir]]"
   from:1996  till:end  color:5  text:"1996-_[[�lafur Ragnar Gr�msson|�lafur Ragnar Gr�msson]]"
-</easytimeline>
+%ENDTIMELINE%
 </verbatim>
 </tr>
 </table>
@@ -104,7 +111,7 @@ An example of multiple parallel timelines. View Raw Text of this topic to see so
 <img src="%ATTACHURLPATH%/WindowsVersionsExample.png" alt="WindowsVersionsExample.png" width='800' height='140' />
 
 <!-- hidden source
-<easytimeline>
+%TIMELINE%
 ImageSize = width:800 height:142
 PlotArea  = width:720 height:112 left:65 bottom:25
 AlignBars = justify
@@ -163,7 +170,7 @@ PlotData=
   at:2000.25 text:Windows~CE 3.0
   at:2002.17 text:CE~4.0
   at:2003.67 text:Mobile~2003
-</easytimeline>
+%ENDTIMELINE%
 -->
 
 ---+++ Binary Logic Example
@@ -173,7 +180,7 @@ This plugin might be of help in descriping binary logic execution patterns, as f
 <img src="%ATTACHURLPATH%/BinaryLogicExample.png" alt="BinaryLogicExample.png" width='400' height='63' />
 
 <!-- hidden timeline source
-<easytimeline>
+%TIMELINE%
 ImageSize  = width:400 height:60
 PlotArea   = left:30 bottom:30 top:0 right:20
 DateFormat = x.y
@@ -194,7 +201,7 @@ PlotData=
   from:1 till:2
   from:4 till:5
   from:10 till:15
-</easytimeline>
+%ENDTIMELINE%
 -->
 
 ---+++ UNIX Versions Example
@@ -204,7 +211,7 @@ Information dense graphic, heavy use of mouseover areas. View Raw Text of this t
 <img src="%ATTACHURLPATH%/UNIXVersionsExample.png" alt="UNIXVersionsExample.png" width='606' height='550' />
 
 <!--
-<easytimeline>
+%TIMELINE%
 ImageSize  = width:600 height:550
 PlotArea   = left:50 right:0 bottom:20 top:10
 
@@ -323,7 +330,7 @@ PlotData=
   at:2003 text:"[[Minix]] 2.0.4"
   at:2004 text:"[[QNX]] 6.3"
   at:2005 text:"[[Darwin (kernel)|Darwin]] 7.8"
-</easytimeline>
+%ENDTIMELINE%
 -->
 
 ---+++ Kurdistan Workers Party Example
@@ -333,7 +340,7 @@ Very condensed timeline. Not taking up much space, but very informative in it's 
 <img src="%ATTACHURLPATH%/KurdistanWorkersPartyExample.png" alt="KurdistanWorkersPartyExample.png" width='600' height='69' />
 
 <!-- hidden source
-<easytimeline>
+%TIMELINE%
 ImageSize  = width:600px height:70px
 PlotArea   = width:570px height:20px left:20px bottom:20px
 AlignBars  = late
@@ -383,7 +390,7 @@ PlotData =
     from:01/12/1984 till:end        $narrow   $center2   color:pink         textcolor:pink        text:Vacuum at N-Iraq
     from:01/01/1996 till:01/04/1999 $broad    $center1   color:blue         textcolor:blue        text:Undecleared War
     from:01/08/1998 till:01/04/1999 $large    $center0   color:red          textcolor:red         text:Capture
-</easytimeline>
+%ENDTIMELINE%
 -->
 
 ---+++ New Kingdom Example
@@ -395,7 +402,7 @@ Btw: There's no hinderance to having the bars overlap if wanted. (I guess that's
 <img src="%ATTACHURLPATH%/NewKingdomExample.png" alt="NewKingdomExample.png" width='800' height='435' />
 
 <!-- hidden source
-<easytimeline>
+%TIMELINE%
 ImageSize = width:800 height:auto barincrement:12
 PlotArea  = top:10 bottom:30 right:130 left:20
 AlignBars  = justify
@@ -465,7 +472,7 @@ PlotData=
   from: -1103 till: -1072 color:PA text:"[[Ramesses XI]]"
 
   barset:skip
-</easytimeline>
+%ENDTIMELINE%
 -->
 
 ---+++ Freeciv Timeline Example
@@ -475,7 +482,7 @@ Very spartanic look, only a few colours used. View Raw Text of this topic to see
 <img src="%ATTACHURLPATH%/FreecivTimelineExample.png" alt="FreecivTimelineExample.png" width='800' height='109' />
 
 <!-- hidden source
-<easytimeline>
+%TIMELINE%
 ImageSize  = width:800 height:110
 PlotArea   = left:80 right:50 bottom:20 top:10
 AlignBars  = justify
@@ -506,7 +513,7 @@ PlotData=
 
   bar:Others color:black width:20 mark:(line,red) align:left fontsize:S
   at:05/04/1999 text:" Civilization: Call to Power"
-</easytimeline>
+%ENDTIMELINE%
 -->
 
 ---+++ Vocal and Instrumental Pitch Ranges
@@ -515,7 +522,7 @@ An example on displaying something that is not chronological at all. View Raw Te
 
 <img src="%ATTACHURLPATH%/Vocal_and_Instrumental_Pitch_Ranges_Example.png" alt="Vocal_and_Instrumental_Pitch_Ranges_Example.png" width='700' height='1227' />
 <!-- hidden source
-<easytimeline>
+%TIMELINE%
 ImageSize  = width:700 height:auto barincrement:17
 PlotArea   = left:0 right:0 top:0 bottom:0
 AlignBars  = justify
@@ -734,7 +741,7 @@ PlotData=
   at:502   text:2000
   at:544   text:3000
   at:583   text:4400 Hz
-</easytimeline>
+%ENDTIMELINE%
 -->
 
 ---+++ Timeline of Conquests of the Ottoman Empire Example
@@ -744,7 +751,7 @@ A somewhat dense and graphic timeline; could probably be lightened with good eff
 <img src="%ATTACHURLPATH%/Timeline_of_Conquests_of_the_Ottoman_Empire_Example.png" alt="Timeline_of_Conquests_of_the_Ottoman_Empire_Example.png" width='600' height='293' />
 
 <!-- hidden source
-<easytimeline>
+%TIMELINE%
 DateFormat=yyyy
 ImageSize = width:600 height:auto barincrement:12
 Period = from:1299 till:1922
@@ -804,38 +811,52 @@ LineData =
  points:(504,249)(533,196)     color:blue    width:2
 ScaleMajor = gridcolor:line unit:year increment:100 start:1400
 ScaleMinor = gridcolor:liteline unit:year increment:20 start:1300
-</easytimeline>
+%ENDTIMELINE%
 -->
 
----++ Plugin Settings
+---++ Coming from TWiki?
 
-Plugin settings are stored as preferences variables. To reference a plugin setting write ==%<nop>&lt;plugin&gt;_&lt;setting&gt;%==, for example, ==%<nop>EASYTIMELINEPLUGIN_SHORTDESCRIPTION%==
+If you are coming from the TWiki version of this plugin you will need to be aware that the syntax of this plugin has changed. The TWiki version used the following syntax:
 
-   * One line description, shown in the %SYSTEMWEB%.TextFormattingRules topic:
-      * Set SHORTDESCRIPTION = Generate graphical timeline diagrams from markup text
+<verbatim>
+<easytimeline>
+...
+<easytimeline>
+</verbatim>
 
-   * Debug plugin: (See output in =data/debug.txt=)
-      * Set DEBUG = 0
+However, this syntax can cause problems when using a WYSIWYG editor and is different than the standard %<nop>MACRO% syntax. Therefore the syntax has been changed in this version to:
+
+<verbatim>
+%TIMELINE%
+...
+%ENDTIMELINE%
+</verbatim>
+
+There is a script included that converts topics using the old syntax to the new. Always test on a copy of your data first!
 
 ---++ Installation Instructions
 
 %$INSTALL_INSTRUCTIONS%
 
+Once you have installed the plugin you should visit =configure= and check that the paths for Ploticus and the !EasyTimeline.pl script are correct.
+
 ---++ Plugin Info
 
-
-|  Plugin Author: | TWiki:Main.MikeMarion |
-|  Copyright: | &copy; 2006, Mike Marion |
-|  License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
-|  Plugin Version: | 22 Apr 2006 (v2.1) |
+|  Plugin Author(s): | Foswiki:Main.AndrewJones |
+|  Previous Author(s): | TWiki:Main.SteffenPoulsen, TWiki:Main.MikeMarion |
+|  Copyright: | &copy; 2009, Andrew Jones, &copy; 2006, Mike Marion |
+|  License: | [[http://www.gnu.org/licenses/gpl.html][GPL (Gnu General Public License)]] |
+|  Plugin Release: | %$RELEASE% |
+|  Plugin Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  13 Mar 2009  | Foswiki:Tasks.ItemItem1252 - New 1.0 release for Foswiki; New standard syntax and script to convert; Updated EasyTimeline.pl script; Changes to code to use more of the official extension API; Configuration items now set in configure - Foswiki:Main.AndrewJones |
 |  20 Jul 2006: | v2.1 - Support for hierarchical webs. (TWiki:Main.SteffenPoulsen)  |
 |  22 Apr 2006: | v2.0 - Rewrote plugin from scratch. Multiple timelines per topic and sandbox security mechanism. Generated files attached to timeline topic. <nop>EasyTimeline.pl script now shipped in plugin. Multiple demonstration samples added. Doc updated. (TWiki:Main.SteffenPoulsen)  |
 |  11 Feb 2006: | v1.0 - Initial version |
-|  CPAN Dependencies: | none |
-|  Other Dependencies: | !EasyTimline.pl from http://infodisiac.com/Wikipedia/EasyTimeline/Introduction.htm (now included in plugin), and ploticus from http://ploticus.sourceforge.net/doc/download.html |
-|  Perl Version: | 5.8+ |
+|  Dependencies: | %$DEPENDENCIES% |
 |  Plugin Home: | http://foswiki.org/Extensions/%TOPIC% |
+|  Support: | http://foswiki.org/Support/%TOPIC% |
+
 
 __Related Topics:__ [[%SYSTEMWEB%.Plugins][Plugins]], %SYSTEMWEB%.DeveloperDocumentationCategory, %SYSTEMWEB%.AdminDocumentationCategory, %SYSTEMWEB%.DefaultPreferences, %USERSWEB%.SitePreferences
 

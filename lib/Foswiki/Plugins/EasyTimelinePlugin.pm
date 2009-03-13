@@ -1,5 +1,8 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
+# Copyright (C) 2009 Andrew Jones, andrewjones86@gmail.com
+# Copyright (C) 2006 Mike Marion
+#
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
@@ -30,7 +33,7 @@ use File::Path;
 
 our $VERSION = '$Rev$';
 our $RELEASE = '1.0';
-our $SHORTDESCRIPTION = 'shot desc';
+our $SHORTDESCRIPTION = 'Generate graphical timeline diagrams from markup text';
 our $NO_PREFS_IN_TOPIC = 1;
 our $pluginName = 'EasyTimelinePlugin';
 
@@ -38,13 +41,6 @@ our $pluginName = 'EasyTimelinePlugin';
 # =========================
 sub initPlugin {
     my ( $topic, $web ) = @_;
-
-    # check for Plugins.pm versions
-    if ( $Foswiki::Plugins::VERSION < 1 ) {
-        logWarning(
-            "Version mismatch between $pluginName and Plugins.pm");
-        return 0;
-    }
     
     # need a path to script in tool directory
     unless( $Foswiki::cfg{Plugins}{$pluginName}{EasyTimelineScript} ){
@@ -75,11 +71,11 @@ sub commonTagsHandler {
     Foswiki::Func::writeDebug("- ${pluginName}::commonTagsHandler( $_[2].$_[1] )")
       if $Foswiki::cfg{Plugins}{$pluginName}{Debug};
 
-    # This is the place to define customized tags and variables
-    # Called by sub handleCommonTags, after %INCLUDE:"..."%
-
-    # Pass everything within <easytimeline> tags to handleTimeline function
-    $_[0] =~ s/<easytimeline>(.*?)<\/easytimeline>/&handleTimeline($1, $_[2], $_[1])/giseo;
+    # Old syntax, using <easytimeline>.....</easytimeline>
+    #$_[0] =~ s/<easytimeline>(.*?)<\/easytimeline>/&handleTimeline($1, $_[2], $_[1])/giseo;
+    
+    # New syntax, using %TIMELINE%.....%ENDTIMELINE%
+    $_[0] =~ s/%TIMELINE%\s*(.*?)%ENDTIMELINE%/&handleTimeline($1, $_[2], $_[1])/egs;
 }
 
 # =========================
@@ -97,7 +93,7 @@ sub handleTimeline {
         umask(002);
         mkpath( $dir, 0, 0755 )
           or return
-          "!EasyTimelinePlugin Error: *folder $dir could not be created*";
+          "!$pluginName Error: *folder $dir could not be created*";
     }
 
     # compute the MD5 hash of this string
@@ -118,12 +114,12 @@ sub handleTimeline {
         unless ( -e "$tmpDir" ) {
             umask(002);
             mkpath( $tmpDir, 0, 0755 )
-              or return "!EasyTimelinePlugin Error: *tmp folder $tmpDir could not be created*";
+              or return "!$pluginName Error: *tmp folder $tmpDir could not be created*";
         }
 
         # output the timeline text into the tmp file
         open OUTFILE, ">$tmpFile.txt"
-          or return "!EasyTimelinePlugin Error: could not create file";
+          or return "!$pluginName Error: could not create file";
         print OUTFILE $text;
         close OUTFILE;
 
@@ -143,7 +139,7 @@ sub handleTimeline {
             WEB    => $web,
             TMPDIR => $tmpDir,
         );
-        &writeDebug("EasyTimelinePlugin: output $output status $status");
+        &writeDebug("$pluginName: output $output status $status");
         if ($status) {
             
             my @errLines;
@@ -171,7 +167,7 @@ sub handleTimeline {
                 file     => "$tmpFile.png",
                 filesize => $stats[7],
                 filedate => $stats[9],
-                comment  => '<nop>EasyTimelinePlugin: Timeline graphic',
+                comment  => "!$pluginName: Timeline graphic",
                 hide     => 1,
                 dontlog  => 1
             }
@@ -189,7 +185,7 @@ sub handleTimeline {
                     filesize => $stats[7],
                     filedate => $stats[9],
                     comment  =>
-                      '<nop>EasyTimelinePlugin: Timeline clientside map file',
+                      "!$pluginName: Timeline clientside map file",
                     hide    => 1,
                     dontlog => 1
                 }
@@ -227,20 +223,6 @@ sub handleTimeline {
 }
 
 # =========================
-sub showError {
-    my ( $status, $output, $text ) = @_;
-
-    $output =~ s/^.*: (.*)/$1/;
-    my $line = 1;
-    $text =~ s/\n/sprintf("\n%02d: ", $line++)/ges;
-    $output .= "<pre>$text\n</pre>";
-    return "<noautolink><font color=\"red\"><nop>EasyTimelinePlugin Error ($status): $output</font></noautolink>";
-}
-
-sub writeDebug {
-    &Foswiki::Func::writeDebug( "$pluginName - " . $_[0] ) if $Foswiki::cfg{Plugins}{$pluginName}{Debug};
-}
-
 sub cleanTmp {
     my $dir    = shift;
     my $rmfile = "";
@@ -265,6 +247,21 @@ sub cleanTmp {
     }
     close(DIR);
     rmdir("$dir");
+}
+
+# =========================
+sub showError {
+    my ( $status, $output, $text ) = @_;
+
+    $output =~ s/^.*: (.*)/$1/;
+    my $line = 1;
+    $text =~ s/\n/sprintf("\n%02d: ", $line++)/ges;
+    $output .= "<pre>$text\n</pre>";
+    return "<noautolink><span class='foswikiAlert'>!$pluginName Error ($status): $output</span></noautolink>";
+}
+
+sub writeDebug {
+    &Foswiki::Func::writeDebug( "$pluginName - " . $_[0] ) if $Foswiki::cfg{Plugins}{$pluginName}{Debug};
 }
 
 sub logWarning {
