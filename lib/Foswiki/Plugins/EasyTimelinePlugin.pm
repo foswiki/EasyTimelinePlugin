@@ -20,7 +20,7 @@ package Foswiki::Plugins::EasyTimelinePlugin;
 
 # =========================
 use vars qw(
-  $web $topic $user $installWeb $VERSION $RELEASE $pluginName $NO_PREFS_IN_TOPIC $SHORTDESCRIPTION
+ $VERSION $RELEASE $pluginName $NO_PREFS_IN_TOPIC $SHORTDESCRIPTION
 );
 
 use Digest::MD5 qw( md5_hex );
@@ -34,19 +34,14 @@ our $SHORTDESCRIPTION = 'shot desc';
 our $NO_PREFS_IN_TOPIC = 1;
 our $pluginName = 'EasyTimelinePlugin';
 
-my $HASH_CODE_LENGTH    = 32;
-my %hashed_math_strings = ();
-
-my $tmpDir  = '/tmp/' . $pluginName . "$$";
-my $tmpFile = '/tmp/' . $pluginName . "$$" . '/' . $pluginName . "$$";
 
 # =========================
 sub initPlugin {
-    ( $topic, $web, $user, $installWeb ) = @_;
+    my ( $topic, $web ) = @_;
 
     # check for Plugins.pm versions
     if ( $Foswiki::Plugins::VERSION < 1 ) {
-        Foswiki::Func::writeWarning(
+        logWarning(
             "Version mismatch between $pluginName and Plugins.pm");
         return 0;
     }
@@ -54,14 +49,14 @@ sub initPlugin {
     # need a path to script in tool directory
     unless( $Foswiki::cfg{Plugins}{$pluginName}{EasyTimelineScript} ){
         # throw error, do not init
-        Foswiki::Func::writeWarning(
+        logWarning(
             "$pluginName cant find EasyTimeline.pl - Try running configure");
         return 0;
     }
     # need a path to Ploticus
     unless( $Foswiki::cfg{Plugins}{$pluginName}{PloticusCmd} ){
         # throw error, do not init
-        Foswiki::Func::writeWarning(
+        logWarning(
             "$pluginName cant find Ploticus (pl) - Try running configure");
         return 0;
     }
@@ -78,17 +73,23 @@ sub commonTagsHandler {
 ### my ( $text, $topic, $web ) = @_;   # do not uncomment, use $_[0], $_[1]... instead
 
     Foswiki::Func::writeDebug("- ${pluginName}::commonTagsHandler( $_[2].$_[1] )")
-      if $debug;
+      if $Foswiki::cfg{Plugins}{$pluginName}{Debug};
 
     # This is the place to define customized tags and variables
     # Called by sub handleCommonTags, after %INCLUDE:"..."%
 
     # Pass everything within <easytimeline> tags to handleTimeline function
-    $_[0] =~ s/<easytimeline>(.*?)<\/easytimeline>/&handleTimeline($1)/giseo;
+    $_[0] =~ s/<easytimeline>(.*?)<\/easytimeline>/&handleTimeline($1, $_[2], $_[1])/giseo;
 }
 
 # =========================
 sub handleTimeline {
+    
+    my( $text, $web, $topic ) = @_;
+    
+    my $tmpDir  = Foswiki::Func::getWorkArea( $pluginName ) . '/tmp/' . $pluginName . "$$";
+    my $tmpFile = $tmpDir . '/' . $pluginName . "$$";
+    my %hashed_math_strings = ();
 
     # Create topic directory "pub/$web/$topic" if needed
     my $dir = Foswiki::Func::getPubDir() . "/$web/$topic";
@@ -96,14 +97,14 @@ sub handleTimeline {
         umask(002);
         mkpath( $dir, 0, 0755 )
           or return
-          "<noc>EasyTimelinePlugin Error: *folder $dir could not be created*";
+          "!EasyTimelinePlugin Error: *folder $dir could not be created*";
     }
 
     # compute the MD5 hash of this string
-    my $hash_code = md5_hex("EASYTIMELINE$_[0]");
+    my $hash_code = md5_hex("EASYTIMELINE$text");
 
     # store the string in a hash table, indexed by the MD5 hash
-    $hashed_math_strings{"$hash_code"} = $_[0];
+    $hashed_math_strings{"$hash_code"} = $text;
 
     my $image = "${dir}/graph${hash_code}.png";
 
@@ -117,18 +118,18 @@ sub handleTimeline {
         unless ( -e "$tmpDir" ) {
             umask(002);
             mkpath( $tmpDir, 0, 0755 )
-              or return "<noc>EasyTimelinePlugin Error: *tmp folder $tmpDir could not be created*";
+              or return "!EasyTimelinePlugin Error: *tmp folder $tmpDir could not be created*";
         }
 
         # output the timeline text into the tmp file
         open OUTFILE, ">$tmpFile.txt"
-          or return "<noc>EasyTimelinePlugin Error: could not create file";
-        print OUTFILE $_[0];
+          or return "!EasyTimelinePlugin Error: could not create file";
+        print OUTFILE $text;
         close OUTFILE;
 
         # run the command and create the png
         my $cmd =
-            '/usr/bin/perl ' .
+            'perl ' .
             $Foswiki::cfg{Plugins}{$pluginName}{EasyTimelineScript} . # /var/www/html/foswiki/tools/EasyTimeline.pl
             ' -i %INFILE|F% -m -P ' .
             $Foswiki::cfg{Plugins}{$pluginName}{PloticusCmd} . # /usr/local/bin/pl
@@ -146,9 +147,10 @@ sub handleTimeline {
         if ($status) {
             
             my @errLines;
-            cleanTmp($tmpDir) unless $debug;
+            cleanTmp($tmpDir) unless $Foswiki::cfg{Plugins}{$pluginName}{Debug};
             
-            return Error( "Error when executing command. Maybe Ploticus is not installed? Status: $status; Output: $output; Text: <pre>" . $hashed_math_strings{$hash_code} . "</pre>" );
+            return &showError( $status, $output,
+                $hashed_math_strings{"$hash_code"} );
         }
         if ( -e "$tmpFile.err" ) {
 
@@ -156,7 +158,7 @@ sub handleTimeline {
             open( ERRFILE, "$tmpFile.err" );
             my @errLines = <ERRFILE>;
             close(ERRFILE);
-            cleanTmp($tmpDir) unless $debug;
+            cleanTmp($tmpDir) unless $Foswiki::cfg{Plugins}{$pluginName}{Debug};
             return &showError( $status, $output, join( "", @errLines ) );
         }
 
@@ -195,7 +197,7 @@ sub handleTimeline {
 
         }
         # Clean up temporary files
-        cleanTmp($tmpDir) unless $debug;
+        cleanTmp($tmpDir) unless $Foswiki::cfg{Plugins}{$pluginName}{Debug};
     }
 
     if ( -e "${dir}/graph${hash_code}.map" ) {
@@ -233,10 +235,6 @@ sub showError {
     $text =~ s/\n/sprintf("\n%02d: ", $line++)/ges;
     $output .= "<pre>$text\n</pre>";
     return "<noautolink><font color=\"red\"><nop>EasyTimelinePlugin Error ($status): $output</font></noautolink>";
-}
-
-sub Error {
-    return "<noautolink><font color=\"red\"><nop>EasyTimelinePlugin Error: ".  shift . "</font></noautolink>";
 }
 
 sub writeDebug {
