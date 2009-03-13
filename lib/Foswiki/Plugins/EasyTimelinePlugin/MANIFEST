@@ -1,5 +1,6 @@
 data/System/EasyTimelinePlugin.txt Documentation Topic
 lib/Foswiki/Plugins/EasyTimelinePlugin.pm Plugin Perl Module
+lib/Foswiki/Plugins/EasyTimelinePlugin/Config.spec Configuration Items
 pub/System/EasyTimelinePlugin/BinaryLogicExample.png NEW
 pub/System/EasyTimelinePlugin/EasyTimeLine_Homepage_Mirror_21-Apr-2006.zip NEW
 pub/System/EasyTimelinePlugin/FreecivTimelineExample.png NEW

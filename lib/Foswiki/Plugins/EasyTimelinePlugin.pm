@@ -20,33 +20,22 @@ package Foswiki::Plugins::EasyTimelinePlugin;
 
 # =========================
 use vars qw(
-  $web $topic $user $installWeb $VERSION $RELEASE $pluginName
-  $debug $exampleCfgVar
+  $web $topic $user $installWeb $VERSION $RELEASE $pluginName $NO_PREFS_IN_TOPIC $SHORTDESCRIPTION
 );
 
-# This should always be $Rev$ so that TWiki can determine the checked-in
-# status of the plugin. It is used by the build automation tools, so
-# you should leave it alone.
-$VERSION = '$Rev$';
-
-# This is a free-form string you can use to "name" your own plugin version.
-# It is *not* used by the build automation tools, but is reported as part
-# of the version number in PLUGINDESCRIPTIONS.
-$RELEASE = 'Dakar';
-
-$pluginName = 'EasyTimelinePlugin';
 use Digest::MD5 qw( md5_hex );
 
 #the MD5 and hash table are used to create a unique name for each timeline
 use File::Path;
 
+our $VERSION = '$Rev$';
+our $RELEASE = '1.0';
+our $SHORTDESCRIPTION = 'shot desc';
+our $NO_PREFS_IN_TOPIC = 1;
+our $pluginName = 'EasyTimelinePlugin';
+
 my $HASH_CODE_LENGTH    = 32;
 my %hashed_math_strings = ();
-
-# Please update sandbox command string to fit your environment:
-# FIXME: should be in configure
-my $cmd =
-'/usr/bin/perl /var/www/html/foswiki/foswiki01x00/core/tools/EasyTimeline.pl -i %INFILE|F% -m -P /usr/local/bin/pl -T %TMPDIR|F% -A /foswiki01x00/bin/view/%WEB|F%';
 
 my $tmpDir  = '/tmp/' . $pluginName . "$$";
 my $tmpFile = '/tmp/' . $pluginName . "$$" . '/' . $pluginName . "$$";
@@ -61,14 +50,26 @@ sub initPlugin {
             "Version mismatch between $pluginName and Plugins.pm");
         return 0;
     }
-
-    # Get plugin debug flag
-    $debug = Foswiki::Func::getPreferencesFlag("\U$pluginName\E_DEBUG");
+    
+    # need a path to script in tool directory
+    unless( $Foswiki::cfg{Plugins}{$pluginName}{EasyTimelineScript} ){
+        # throw error, do not init
+        Foswiki::Func::writeWarning(
+            "$pluginName cant find EasyTimeline.pl - Try running configure");
+        return 0;
+    }
+    # need a path to Ploticus
+    unless( $Foswiki::cfg{Plugins}{$pluginName}{PloticusCmd} ){
+        # throw error, do not init
+        Foswiki::Func::writeWarning(
+            "$pluginName cant find Ploticus (pl) - Try running configure");
+        return 0;
+    }
 
     # Plugin correctly initialized
-    Foswiki::Func::writeDebug(
-        "- Foswiki::Plugins::${pluginName}::initPlugin( $web.$topic ) is OK")
-      if $debug;
+    writeDebug(
+        "- Foswiki::Plugins::${pluginName}::initPlugin( $web.$topic ) is OK");
+    
     return 1;
 }
 
@@ -125,7 +126,16 @@ sub handleTimeline {
         print OUTFILE $_[0];
         close OUTFILE;
 
-        # create the png
+        # run the command and create the png
+        my $cmd =
+            '/usr/bin/perl ' .
+            $Foswiki::cfg{Plugins}{$pluginName}{EasyTimelineScript} . # /var/www/html/foswiki/tools/EasyTimeline.pl
+            ' -i %INFILE|F% -m -P ' .
+            $Foswiki::cfg{Plugins}{$pluginName}{PloticusCmd} . # /usr/local/bin/pl
+            ' -T %TMPDIR|F% -A ' .
+            $Foswiki::cfg{ScriptUrlPath} . 'view' . $Foswiki::cfg{ScriptSuffix} . # /bin/view/
+            '/%WEB|F%';
+        &writeDebug("Command: $cmd");
         my ( $output, $status ) = Foswiki::Sandbox->sysCommand(
             $cmd,
             INFILE => $tmpFile . '.txt',
@@ -230,7 +240,7 @@ sub Error {
 }
 
 sub writeDebug {
-    &Foswiki::Func::writeDebug( "$pluginName - " . $_[0] ) if $debug;
+    &Foswiki::Func::writeDebug( "$pluginName - " . $_[0] ) if $Foswiki::cfg{Plugins}{$pluginName}{Debug};
 }
 
 sub cleanTmp {
