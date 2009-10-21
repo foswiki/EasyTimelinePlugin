@@ -16,7 +16,7 @@ For first time users <nop>%TOPIC% may not seem that easy at all. As with all scr
 
 The 'Easy' in <nop>%TOPIC% conveys the message that once a timeline exists it is not that hard to understand, enhance or correct.
 
-Full syntax and markup description is available at http://infodisiac.com/Wikipedia/EasyTimeline/Syntax.htm.
+Full syntax and markup description is available at http://www.mediawiki.org/wiki/Extension:EasyTimeline/syntax.
 
 %TOC%
 
