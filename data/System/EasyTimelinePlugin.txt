@@ -6,8 +6,6 @@ One line description, required for extensions repository catalog.
 -->
 %SHORTDESCRIPTION%
 
-%TOC%
-
 As the saying goes: a picture is worth a thousand words. This is certainly true for graphical timelines. A detailed listing of events and dates in tabular form may offer the reader a lot of specifics, but may fail to provide an overview, a grand perspective.
 
 This plugin allows one to use %<nop>TIMELINE% tags to generate a timeline on the fly. This plugin is equal in function to the [[http://meta.wikimedia.org/wiki/EasyTimeline][EasyTimeline Plugin for MediaWiki]] by Erik Zachte, on which this is based.
