@@ -1,4 +1,4 @@
-# ---+ Plugins
+# ---+ Extensions
 # ---++ EasyTimelinePlugin
 # **COMMAND M**
 # Path to Ploticus on your system
