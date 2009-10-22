@@ -117,6 +117,9 @@ sub handleTimeline {
               or return "!$pluginName Error: *tmp folder $tmpDir could not be created*";
         }
 
+        # convert links
+        $text =~ s/\[\[([$Foswiki::regex{mixedAlphaNum}\._\:\/-]*)\]\[([$Foswiki::regex{mixedAlphaNum} \/&\._-]*)\]\]/&renderLink($1, $2, $web, $topic)/egs;
+        
         # output the timeline text into the tmp file
         open OUTFILE, ">$tmpFile.txt"
           or return "!$pluginName Error: could not create file";
@@ -130,13 +133,11 @@ sub handleTimeline {
             ' -i %INFILE|F% -m -P ' .
             $Foswiki::cfg{Plugins}{$pluginName}{PloticusCmd} . # /usr/local/bin/pl
             ' -T %TMPDIR|F% -A ' .
-            $Foswiki::cfg{ScriptUrlPath} . 'view' . $Foswiki::cfg{ScriptSuffix} . # /bin/view/
-            '/%WEB|F%';
+            $Foswiki::cfg{ScriptUrlPath} . 'view' . $Foswiki::cfg{ScriptSuffix}; # /bin/view/
         &writeDebug("Command: $cmd");
         my ( $output, $status ) = Foswiki::Sandbox->sysCommand(
             $cmd,
             INFILE => $tmpFile . '.txt',
-            WEB    => $web,
             TMPDIR => $tmpDir,
         );
         &writeDebug("$pluginName: output $output status $status");
@@ -219,6 +220,20 @@ sub handleTimeline {
           . Foswiki::Func::getPubUrlPath()
           . "/$web/$topic/"
           . "graph${hash_code}.png\">\n";
+    }
+}
+
+# converts Foswiki style links into absolute Mediawiki style links that work with the EasyTimelne.pl script
+sub renderLink {
+    # [[$link][$title]]
+    my ($link, $title, $web, $topic) = @_;
+    
+    if( $link =~ m!^http://! ){
+        return "[[$link|$title]]"
+    } else {
+        my ( $linkedWeb, $linkedTopic ) = Foswiki::Func::normalizeWebTopicName( '', $link );
+        my $url = Foswiki::Func::getScriptUrl( $linkedWeb, $linkedTopic, 'view' );
+        return "[[$url|$title]]";
     }
 }
 

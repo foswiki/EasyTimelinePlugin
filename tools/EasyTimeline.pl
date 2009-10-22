@@ -4999,79 +4999,26 @@ sub ProcessWikiLink
       { $link = "[[" . $link . "]]" ; }
 
       $text =~ s/(\[+) [^\|\]]+ \| ([^\]]*) (\]+)/$1$2$3/gx ;
-      $text =~ s/(https?)\:/$1colon/gx ;
+      #$text =~ s/(https?)\:/$1colon/gx ;
 #     $text =~ s/(\[+) [^\:\]]+ \: ([^\]]*) (\]+)/$1$2$3/gx ;  #???
 
       # remove interwiki link prefix
-      $text =~ s/(\[+) (?:.{2,3}|(?:zh\-.*)|simple|minnan|tokipona) \: ([^\]]*) (\]+)/$1$2$3/gxi ;  #???
+      #$text =~ s/(\[+) (?:.{2,3}|(?:zh\-.*)|simple|minnan|tokipona) \: ([^\]]*) (\]+)/$1$2$3/gxi ;  #???
 
       $text =~ s/\[+ ([^\]]+) \]+/{{{$1}}}/x ;
       $text =~ s/\[+ ([^\]]+) \]+/$1/gx ;
       $text =~ s/\{\{\{ ([^\}]*) \}\}\}/[[$1]]/x ;
     }
-#    if ($text =~ /\[\[.+\]\]/)
-#    {
-#      $wikilink = $true ;
-#      $link = $text ;
-#      $link =~ s/\n//g ;
-#      $link =~ s/^.*?\[\[/[[/x ;
-#      $link =~ s/\| .*? \]\].*$/]]/x ;
-#      $link =~ s/\]\].*$/]]/x ;
-#      $text =~ s/\[\[ [^\|\]]+ \| (.*?) \]\]/[[$1]]/x ;
-#      $text =~ s/\[\[ [^\:\]]+ \: (.*?) \]\]/[[$1]]/x ;
-
-#      # remove remaining links
-#      $text =~ s/\[\[ ([^\]]+) \]\]/^%#$1#%^/x ;
-#      $text =~ s/\[+ ([^\]]+) \]+/$1/gx ;
-#      $text =~ s/\^$hPerc\# (.*?) \#$hPerc\^/[[$1]]/x ;
-#    }
-#    elsif ($text =~ /\[.+\]/)
-#    {
-#      $link = $text ;
-#      $link =~ s/\n//g ;
-#      $link =~ s/^.*?\[/[/x ;
-#      $link =~ s/\| .*? \].*$/]/x ;
-#      $link =~ s/\].*$/]/x ;
-#      $link =~ s/\[ ([^\]]+) \]/$1/x ;
-#      $text =~ s/\[ [^\|\]]+ \| (.*?) \]/[[$1]]/x ;
-
-#      # remove remaining links
-#      $text =~ s/\[\[ ([^\]]+) \]\]/^%#$1#%^/x ;
-#      $text =~ s/\[+ ([^\]]+) \]+/$1/gx ;
-#      $text =~ s/\^$hPerc\# (.*?) \#$hPerc\^/[[$1]]/x ;
-##     $text =~ s/\[\[ (.*) \]\]/$1/gx ;
-#    }
 
   }
 
   if ($wikilink)
   {
-#   if ($link =~ /^\[\[.+\:.+\]\]$/) # has a colon in its name
-    if ($link =~ /^\[\[ (?:.{2,3}|(?:zh\-.*)|simple|minnan|tokipona) \: .+\]\]$/xi) # has a interwiki link prefix
-    {
-      # This will fail for all interwiki links other than Wikipedia.
-      $wiki  = lc ($link) ;
-      $title = $link ;
-      $wiki  =~ s/\[\[([^\:]+)\:.*$/$1/x ;
-      $title =~ s/^[^\:]+\:(.*)\]\]$/$1/x ;
-      $title =~ s/ /_/g ;
-      $link = "http://$wiki.wikipedia.org/wiki/$title" ;
-          $link = &EncodeURL ($title) ;
-      if (($hint eq "") && ($title ne ""))
-      { $hint = "$wiki: $title" ; }
-    }
-    else
-    {
-    # $wiki = "en" ;
-      $title = $link ;
-      $title =~ s/^\[\[(.*)\]\]$/$1/x ;
-      $title =~ s/ /_/g ;
-      $link = $articlepath ;
-          $urlpart = &EncodeURL ($title) ;
-          $link =~ s/\$1/$urlpart/ ;
-      if (($hint eq "") && ($title ne ""))
-      { $hint = "$title" ; }
-    }
+      $link =~ s/^\[\[(.*)\]\]$/$1/x ;
+      $link =~ s/ /_/g ;
+      if (($hint eq "") && ($link ne ""))
+      { $hint = "$link" ; }
+    
     $hint =~ s/_/ /g ;
   }
   else
