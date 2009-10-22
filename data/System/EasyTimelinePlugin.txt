@@ -851,11 +851,11 @@ Once you have installed the plugin you should visit =configure= and check that t
 |  Plugin Release: | %$RELEASE% |
 |  Plugin Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
-|  22 Oct 2009  | Foswiki:Tasks.Item2278 - Fix hyperlinks and upgrade docs - Foswiki:Main.AndrewJones |
-|  13 Mar 2009  | Foswiki:Tasks.Item1252 - New 1.0 release for Foswiki; New standard syntax and script to convert; Updated EasyTimeline.pl script; Changes to code to use more of the official extension API; Configuration items now set in configure - Foswiki:Main.AndrewJones |
-|  20 Jul 2006: | v2.1 - Support for hierarchical webs. (Foswiki:Main.SteffenPoulsen)  |
-|  22 Apr 2006: | v2.0 - Rewrote plugin from scratch. Multiple timelines per topic and sandbox security mechanism. Generated files attached to timeline topic. <nop>EasyTimeline.pl script now shipped in plugin. Multiple demonstration samples added. Doc updated. (TWiki:Main.SteffenPoulsen)  |
-|  11 Feb 2006: | v1.0 - Initial version |
+|  22 Oct 2009  | v1.1 - Foswiki:Tasks.Item2278 - Fix hyperlinks and upgrade docs - Foswiki:Main.AndrewJones |
+|  13 Mar 2009  | v1.0 - Foswiki:Tasks.Item1252 - New 1.0 release for Foswiki; New standard syntax and script to convert; Updated EasyTimeline.pl script; Changes to code to use more of the official extension API; Configuration items now set in configure - Foswiki:Main.AndrewJones |
+|  20 Jul 2006: | Support for hierarchical webs. (Foswiki:Main.SteffenPoulsen)  |
+|  22 Apr 2006: | Rewrote plugin from scratch. Multiple timelines per topic and sandbox security mechanism. Generated files attached to timeline topic. <nop>EasyTimeline.pl script now shipped in plugin. Multiple demonstration samples added. Doc updated. (TWiki:Main.SteffenPoulsen)  |
+|  11 Feb 2006: | Initial version |
 |  Dependencies: | %$DEPENDENCIES% |
 |  Plugin Home: | http://foswiki.org/Extensions/%TOPIC% |
 |  Support: | http://foswiki.org/Support/%TOPIC% |

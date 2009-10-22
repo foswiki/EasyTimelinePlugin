@@ -32,7 +32,7 @@ use Digest::MD5 qw( md5_hex );
 use File::Path;
 
 our $VERSION = '$Rev$';
-our $RELEASE = '1.0';
+our $RELEASE = '1.1';
 our $SHORTDESCRIPTION = 'Generate graphical timeline diagrams from markup text';
 our $NO_PREFS_IN_TOPIC = 1;
 our $pluginName = 'EasyTimelinePlugin';
