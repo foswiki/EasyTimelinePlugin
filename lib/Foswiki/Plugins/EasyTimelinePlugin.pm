@@ -1,6 +1,6 @@
 # Plugin for Foswiki - The Free and Open Source Wiki, http://foswiki.org/
 #
-# Copyright (C) 2009 Andrew Jones, andrewjones86@gmail.com
+# Copyright (C) 2009 - 2010 Andrew Jones, http://andrew-jones.com
 # Copyright (C) 2006 Mike Marion
 #
 # This program is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ use Digest::MD5 qw( md5_hex );
 use File::Path;
 
 our $VERSION = '$Rev$';
-our $RELEASE = '1.1';
+our $RELEASE = '1.2';
 our $SHORTDESCRIPTION = 'Generate graphical timeline diagrams from markup text';
 our $NO_PREFS_IN_TOPIC = 1;
 our $pluginName = 'EasyTimelinePlugin';
