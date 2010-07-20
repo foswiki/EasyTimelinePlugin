@@ -121,101 +121,102 @@
 # - ET does not generate a clickmap when no links are found in the PlotData section (fixed ?) 
 # - I want to get the Bar titles at the top of the bar, instead of at the bottom. 
 
-  $version = "1.15" ;
+$version = "1.15" ;
 
-  use Time::Local ;
-  use Getopt::Std ;
-  use Cwd ;
+use Time::Local ;
+use Getopt::Std ;
+use Cwd ;
 
-  $| = 1; # flush screen output
+$| = 1; # flush screen output
 
-  print "EasyTimeline version $version\n" .
-        "Copyright (C) 2004 Erik Zachte\n" .
-        "Email xxx\@chello.nl (nospam: xxx=epzachte)\n\n" .
-        "This program is free software; you can redistribute it\n" .
-        "and/or modify it under the terms of the \n" .
-        "GNU General Public License version 2 as published by\n" .
-        "the Free Software Foundation\n" .
-        "------------------------------------------------------\n" ;
+print "EasyTimeline version $version\n" .
+      "Copyright (C) 2004 Erik Zachte\n" .
+      "Email xxx\@chello.nl (nospam: xxx=epzachte)\n\n" .
+      "This program is free software; you can redistribute it\n" .
+      "and/or modify it under the terms of the \n" .
+      "GNU General Public License version 2 as published by\n" .
+      "the Free Software Foundation\n" .
+      "------------------------------------------------------\n" ;
 
-  &InitVars ;
-  &SetImageFormat ;
-  &ParseArguments ;
-  &InitFiles ;
+&InitVars ;
+&SetImageFormat ;
+&ParseArguments ;
+&InitFiles ;
 
-  open "FILE_IN", "<", $file_in ;
-  @lines = <FILE_IN> ;
-  close "FILE_IN" ;
+open "FILE_IN", "<", $file_in ;
+@lines = <FILE_IN> ;
+close "FILE_IN" ;
 
-  # check if fonts are specified in input, if so expect unicode compatible input
-  $fonts_specified = $false ;
+# check if fonts are specified in input, if so expect unicode compatible input
+$fonts_specified = $false ;
+foreach $line (@lines)
+{ 
+  if ($line =~ / font\:/)
+  { $fonts_specified = $true ; last ; }
+}  
+
+if ($fonts_specified) 
+{ 
+  &GetFontPath ;
+  print "\nExternal font(s) specified in input ->\nTreat input as unicode compatible.\n\n" ; 
+}
+else
+{
+  # until real unicode support is available (= support of external fonts): translate extended ASCII chars
+  print "\nNo external fonts specified in input ->\nTreat input as ascii and use internal Ploticus font.\n\n" ; 
   foreach $line (@lines)
-  { 
-    if ($line =~ / font\:/)
-    { $fonts_specified = $true ; last ; }
-  }  
+  {
+     $line =~ s/([\xc0-\xdf][\x80-\xbf]|
+                 [\xe0-\xef][\x80-\xbf]{2}|
+                 [\xf0-\xf7][\x80-\xbf]{3})/&UnicodeToAscii($1)/gxeo ;
+    # unfortunately Ploticus uses an odd character mapping lots of unicode chars
+    # in extended ascii range are not available
+    $line =~ tr /¡¢£¥¦©ª«¬­®¯±²³µ¶·¹º»¼½¾¿ÀÅÆÇÈÊÌÏÒÖØÛÞàåæèêìïðòøþÿ/_________________________AAACEEIIOO0Ü_aaaeeii_o0_y/ ;
+  }
+}
+
+&ParseScript ;
+
+if ($CntErrors == 0)
+{ &WritePlotFile ; }
+
+if ($CntErrors == 1)
+{ &Abort ("1 error found") ; }
+elsif ($CntErrors > 1)
+{ &Abort ("$CntErrors errors found") ; }
+else
+{
+  if (defined @Info)
+  {
+    print "\nINFO\n" ;
+    print @Info ;
+    print "\n" ;
+  }
+  if (defined @Warnings)
+  {
+    print "\nWARNING(S)\n" ;
+    print @Warnings ;
+    print "\n" ;
+  }
+
+  if (! (-e $file_bitmap))
+  {
+    print "\nImage $file_bitmap not created.\n" ;
+    if ((! (-e "pl.exe")) && (! (-e "pl")))
+    { print "\nPloticus not found in local folder. Is it on your system path?\n" ; }
+  }
+  elsif (! (-e $file_vector))
+  {
+    print "\nImage $file_vector not created.\n" ;
+  }
+  else
+  { print "\nREADY\nNo errors found.\n" ; }
+}
+
+close "FILE_TRACE" ;
+exit ;
+
   
-  if ($fonts_specified) 
-  { 
-    &GetFontPath ;
-    print "\nExternal font(s) specified in input ->\nTreat input as unicode compatible.\n\n" ; 
-  }
-  else
-  {
-    # until real unicode support is available (= support of external fonts): translate extended ASCII chars
-    print "\nNo external fonts specified in input ->\nTreat input as ascii and use internal Ploticus font.\n\n" ; 
-    foreach $line (@lines)
-    {
-       $line =~ s/([\xc0-\xdf][\x80-\xbf]|
-                   [\xe0-\xef][\x80-\xbf]{2}|
-                   [\xf0-\xf7][\x80-\xbf]{3})/&UnicodeToAscii($1)/gxeo ;
-      # unfortunately Ploticus uses an odd character mapping lots of unicode chars
-      # in extended ascii range are not available
-      $line =~ tr /¡¢£¥¦©ª«¬­®¯±²³µ¶·¹º»¼½¾¿ÀÅÆÇÈÊÌÏÒÖØÛÞàåæèêìïðòøþÿ/_________________________AAACEEIIOO0Ü_aaaeeii_o0_y/ ;
-    }
-  }
-
-  &ParseScript ;
-
-  if ($CntErrors == 0)
-  { &WritePlotFile ; }
-
-  if ($CntErrors == 1)
-  { &Abort ("1 error found") ; }
-  elsif ($CntErrors > 1)
-  { &Abort ("$CntErrors errors found") ; }
-  else
-  {
-    if (defined @Info)
-    {
-      print "\nINFO\n" ;
-      print @Info ;
-      print "\n" ;
-    }
-    if (defined @Warnings)
-    {
-      print "\nWARNING(S)\n" ;
-      print @Warnings ;
-      print "\n" ;
-    }
-
-    if (! (-e $file_bitmap))
-    {
-      print "\nImage $file_bitmap not created.\n" ;
-      if ((! (-e "pl.exe")) && (! (-e "pl")))
-      { print "\nPloticus not found in local folder. Is it on your system path?\n" ; }
-    }
-    elsif (! (-e $file_vector))
-    {
-      print "\nImage $file_vector not created.\n" ;
-    }
-    else
-    { print "\nREADY\nNo errors found.\n" ; }
-  }
-
-  close "FILE_TRACE" ;
-  exit ;
-
 sub ParseArguments
 {
   my $options ;
@@ -1058,34 +1059,40 @@ sub ParseFonts
       }
       elsif ($attribute =~ /^(?:xs|s|m|l|xl)$/)
       {
-        if (! ($attrvalue =~ /^\d+(?:\.\d+)?$/))
-        { &Error ("Fonts attribute '$attribute' invalid. Specify numeric value.") ; 
-        	 &GetData ; next FontData ; }
+        if (! ($attrvalue =~ /^\d+(?:\.\d+)?$/)) { 
+            &Error ("Fonts attribute '$attribute' invalid. Specify numeric value.") ;
+            &GetData;
+            next FontData;
+        }
         @sizes {lc ($attribute)} = $attrvalue ; 
       }
     }
     
-    if (@fontfiles {lc ($fontfile)} eq "")
-    {
-    	 $listfonts = $true ;
-    	 &Error ("Section Fonts invalid. Attribute 'font': file '$fontfile.ttf' not available.") ;
-      &GetData ; next Fonts ; 
+    if (@fontfiles {lc ($fontfile)} eq "") {
+        $listfonts = $true ;
+        &Error ("Section Fonts invalid. Attribute 'font': file '$fontfile.ttf' not available.") ;
+        &GetData;
+        next Fonts;
     }
     
     if ($fontid !~ /^default$/i)
     {
-      if (@Fonts {lc ($fontid)} ne "")
-      { &Error ("Font id '$fontid' already defined.") ;            
-      	 &GetData ; next Fonts ; }
+      if (@Fonts {lc ($fontid)} ne "") { 
+          &Error ("Font id '$fontid' already defined.") ;            
+          &GetData;
+          next Fonts ;
+      }
     }  
 
-    if (@files {lc ($fontfile)} ne "")
-    { &Error ("Font '$fontfile' already assigned.") ;            
-    	 &GetData ; next Fonts ; }
+    if (@files {lc ($fontfile)} ne "") { 
+        &Error ("Font '$fontfile' already assigned.") ;
+        &GetData;
+        next Fonts ;
+    }
 
-  	 @files {lc ($fontfile)} = $fontfile ; 
+    @files {lc ($fontfile)} = $fontfile ; 
     
-  	 @Fonts {lc ($fontid)} = $fontfile ; 
+    @Fonts {lc ($fontid)} = $fontfile ; 
     
     @FontSizes {lc ($fontfile).":xs"} = @sizes {"xs"} ;
     @FontSizes {lc ($fontfile).":s" } = @sizes {"s" } ;
@@ -1096,8 +1103,9 @@ sub ParseFonts
     &GetData ;
   }
   
-	 if ($listfonts)
-	 { push @Errors, $fonts_available ; }
+  if ($listfonts) { 
+      push @Errors, $fonts_available;
+  }
   undef %files ;
 }
 
@@ -1886,7 +1894,7 @@ sub ParsePlotData
 
     if (($font eq "") && ($fonts_specified))
     { $font = @fontfiles {"default"} ; }
-  	
+
     
 #    if ($text =~ /\[\[.*\[\[/s)
 #    { &Error ("PlotData invalid. Text segment '$text' contains more than one wiki link. Only one allowed.") ;
@@ -2449,7 +2457,7 @@ sub ParseTextData
 
     if (($font eq "") && ($fonts_specified))
     { $font = @fontfiles {"default"} ; }
-    	
+
     if ($fontsize eq "")
     { $fontsize = "S" ; }
 
