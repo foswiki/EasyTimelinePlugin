@@ -1,4 +1,4 @@
-%META:TOPICINFO{author="ProjectContributor" date="1145659803" format="1.0" version="1.1"}%
+%META:TOPICINFO{author="ProjectContributor" date="1291891305" format="1.1" version="1"}%
 ---+!! Easy Timeline Plugin
 <!--
 One line description, required for extensions repository catalog.
@@ -843,6 +843,16 @@ There is a script included that converts topics using the old syntax to the new.
 
 Once you have installed the plugin you should visit =configure= and check that the paths for Ploticus and the !EasyTimeline.pl script are correct.
 
+---++ Diagnostics
+
+If you are having problems with this plugin, you can turn on the =Debug= flag in =configure=. The plugin will then print debug information to your =debug.txt= log file, and will also save a number of temporary files in your =work_areas/EasyTimelinePlugin/tmp= directory.
+
+Things to look for the in the debug log include:
+   * Warnings that it could not find the =ploticus= command
+   * Warnings that it could not find the =EasyTimeline.pl= script
+
+You should also check your =warnings.txt= log file, and InstalledPlugins for more information.
+
 ---++ Plugin Info
 
 |  Plugin Author(s): | Foswiki:Main.AndrewJones |
@@ -852,6 +862,7 @@ Once you have installed the plugin you should visit =configure= and check that t
 |  Plugin Release: | %$RELEASE% |
 |  Plugin Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  09 Dec 2010  | v1.3 - Foswiki:Tasks.Item10114 - Fixes for Windows; Foswiki:Tasks.Item9927 - =umask= fixes - Foswiki:Main.AndrewJones |
 |  11 Feb 2010  | v1.2 - Foswiki:Tasks.Item8484 - Missing screenshot; Foswiki:Tasks.Item8487 - Set NOWYSIWYG for plugin topic; Foswiki:Tasks.Item8488 - Update =pl= dependency. Thanks to Foswiki:Main.BryanThale. - Foswiki:Main.AndrewJones |
 |  22 Oct 2009  | v1.1 - Foswiki:Tasks.Item2278 - Fix hyperlinks and upgrade docs - Foswiki:Main.AndrewJones |
 |  13 Mar 2009  | v1.0 - Foswiki:Tasks.Item1252 - New 1.0 release for Foswiki; New standard syntax and script to convert; Updated EasyTimeline.pl script; Changes to code to use more of the official extension API; Configuration items now set in configure - Foswiki:Main.AndrewJones |
@@ -861,9 +872,6 @@ Once you have installed the plugin you should visit =configure= and check that t
 |  Dependencies: | %$DEPENDENCIES% |
 |  Plugin Home: | http://foswiki.org/Extensions/%TOPIC% |
 |  Support: | http://foswiki.org/Support/%TOPIC% |
-
-
-__Related Topics:__ [[%SYSTEMWEB%.Plugins][Plugins]], %SYSTEMWEB%.DeveloperDocumentationCategory, %SYSTEMWEB%.AdminDocumentationCategory, %SYSTEMWEB%.DefaultPreferences, %USERSWEB%.SitePreferences
 
 
 %META:FILEATTACHMENT{name="IcelandicHeritageExample.png" attr="h" autoattached="1" comment="Icelandic Heritage Example" date="1145658157" path="IcelandicHeritageExample.png" size="2012" user="Main.ProjectContributor" version="1"}%
