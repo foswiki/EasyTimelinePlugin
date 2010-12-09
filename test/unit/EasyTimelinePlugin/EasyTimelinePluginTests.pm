@@ -13,7 +13,7 @@ use File::Temp qw/ tempdir /;
 
 sub new {
     my $self = shift()->SUPER::new(@_);
-    
+
 }
 
 sub loadExtraConfig {
@@ -21,8 +21,10 @@ sub loadExtraConfig {
     $this->SUPER::loadExtraConfig();
 
     $Foswiki::cfg{Plugins}{EasyTimelinePlugin}{Enabled} = 1;
-    $Foswiki::cfg{Plugins}{EasyTimelinePlugin}{EasyTimelineScript} = $ENV{FOSWIKI_HOME} . '/tools/EasyTimeline.pl';
-    $Foswiki::cfg{Plugins}{EasyTimelinePlugin}{PloticusCmd} = $ENV{PLOTICUS} || '/usr/bin/pl';
+    $Foswiki::cfg{Plugins}{EasyTimelinePlugin}{EasyTimelineScript} =
+      $ENV{FOSWIKI_HOME} . '/tools/EasyTimeline.pl';
+    $Foswiki::cfg{Plugins}{EasyTimelinePlugin}{PloticusCmd} = $ENV{PLOTICUS}
+      || '/usr/bin/pl';
     $Foswiki::cfg{Plugins}{EasyTimelinePlugin}{Debug} = 0;
 }
 
@@ -37,10 +39,9 @@ sub tear_down {
     $this->SUPER::tear_down();
 }
 
-
 sub test_timeline {
     my $this = shift;
-    
+
 #<<<  do not let perltidy touch this
     my $timeline = <<'HERE';
 %TIMELINE%
@@ -71,65 +72,64 @@ PlotData=
 %ENDTIMELINE%
 HERE
 #>>>
-
-    my $got = Foswiki::Func::expandCommonVariables(
-        $timeline,
-        $this->{test_topic},
-        $this->{test_web},
-    );
-    my $expected = "<img src=\"/pub/$this->{test_web}/$this->{test_topic}/graph.*\.png\">";
-    $this->assert_matches($expected, $got);
+    my $got =
+      Foswiki::Func::expandCommonVariables( $timeline, $this->{test_topic},
+        $this->{test_web}, );
+    my $expected =
+      "<img src=\"/pub/$this->{test_web}/$this->{test_topic}/graph.*\.png\">";
+    $this->assert_matches( $expected, $got );
 }
 
 sub test_untaintPath {
     my $this = shift;
-    
+
     my $p = '/foo/bar/baz.png';
-    $this->assert_equals(
-        Foswiki::Plugins::EasyTimelinePlugin::untaintPath($p),
-        $p,
-        'Unix like path'
-    );
+    $this->assert_equals( Foswiki::Plugins::EasyTimelinePlugin::untaintPath($p),
+        $p, 'Unix like path' );
     $p = 'C:/PROGRA~1/bar/baz.png';
-    $this->assert_equals(
-        Foswiki::Plugins::EasyTimelinePlugin::untaintPath($p),
-        $p,
-        'Windows like path'
-    );
+    $this->assert_equals( Foswiki::Plugins::EasyTimelinePlugin::untaintPath($p),
+        $p, 'Windows like path' );
     $this->assert_null(
-         Foswiki::Plugins::EasyTimelinePlugin::untaintPath('./rm -Rf *'),
-        'Unix like bad path'
-    );
+        Foswiki::Plugins::EasyTimelinePlugin::untaintPath('./rm -Rf *'),
+        'Unix like bad path' );
     $this->assert_null(
-         Foswiki::Plugins::EasyTimelinePlugin::untaintPath('/a/path;rm -Rf *'),
-        'Unix like bad path 2'
-    );
+        Foswiki::Plugins::EasyTimelinePlugin::untaintPath('/a/path;rm -Rf *'),
+        'Unix like bad path 2' );
     $this->assert_null(
-         Foswiki::Plugins::EasyTimelinePlugin::untaintPath('/a/path && rm -Rf *'),
+        Foswiki::Plugins::EasyTimelinePlugin::untaintPath(
+            '/a/path && rm -Rf *'),
         'Unix like bad path 3'
     );
 }
 
 sub test_cleanTmp {
     my $this = shift;
-    
+
     my $tmpdir = tempdir();
-    $this->assert( -d $tmpdir, "tmp directory ($tmpdir) has been created");
+    $this->assert( -d $tmpdir, "tmp directory ($tmpdir) has been created" );
     Foswiki::Plugins::EasyTimelinePlugin::cleanTmp($tmpdir);
-    $this->assert(! -d $tmpdir, "tmp directory ($tmpdir) has been removed");
+    $this->assert( !-d $tmpdir, "tmp directory ($tmpdir) has been removed" );
 }
 
 sub test_renderLink {
     my $this = shift;
-    
+
     $this->assert_equals(
-        Foswiki::Plugins::EasyTimelinePlugin::renderLink('http://foswiki.org', 'Foswiki'),
+        Foswiki::Plugins::EasyTimelinePlugin::renderLink(
+            'http://foswiki.org', 'Foswiki'
+        ),
         '[[http://foswiki.org|Foswiki]]'
     );
-    
+
     $this->assert_equals(
-        Foswiki::Plugins::EasyTimelinePlugin::renderLink("$this->{test_web}.$this->{test_topic}", 'Test Link'),
-        '[[' . Foswiki::Func::getScriptUrl($this->{test_web}, $this->{test_topic}, 'view') . '|Test Link]]'
+        Foswiki::Plugins::EasyTimelinePlugin::renderLink(
+            "$this->{test_web}.$this->{test_topic}",
+            'Test Link'
+        ),
+        '[['
+          . Foswiki::Func::getScriptUrl( $this->{test_web}, $this->{test_topic},
+            'view' )
+          . '|Test Link]]'
     );
 }
 

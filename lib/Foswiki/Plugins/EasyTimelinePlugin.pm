@@ -23,54 +23,58 @@ package Foswiki::Plugins::EasyTimelinePlugin;
 
 # =========================
 use vars qw(
- $VERSION $RELEASE $pluginName $NO_PREFS_IN_TOPIC $SHORTDESCRIPTION
+  $VERSION $RELEASE $pluginName $NO_PREFS_IN_TOPIC $SHORTDESCRIPTION
 );
 
-use Foswiki::Func ();
+use Foswiki::Func    ();
 use Foswiki::Sandbox ();
 use Digest::MD5 qw( md5_hex );
+
 #the MD5 and hash table are used to create a unique name for each timeline
 use File::Path;
 
-our $VERSION = '$Rev$';
-our $RELEASE = '1.3';
+our $VERSION          = '$Rev$';
+our $RELEASE          = '1.3';
 our $SHORTDESCRIPTION = 'Generate graphical timeline diagrams from markup text';
 our $NO_PREFS_IN_TOPIC = 1;
-our $pluginName = 'EasyTimelinePlugin';
+our $pluginName        = 'EasyTimelinePlugin';
 
 my $png_or_gif;
-
 
 # =========================
 sub initPlugin {
     my ( $topic, $web ) = @_;
-    
+
     # need a path to script in tool directory
-    unless( $Foswiki::cfg{Plugins}{$pluginName}{EasyTimelineScript} ){
+    unless ( $Foswiki::cfg{Plugins}{$pluginName}{EasyTimelineScript} ) {
+
         # throw error, do not init
         logWarning(
             "$pluginName cant find EasyTimeline.pl - Try running configure");
         return 0;
     }
+
     # need a path to Ploticus
-    unless( $Foswiki::cfg{Plugins}{$pluginName}{PloticusCmd} ){
+    unless ( $Foswiki::cfg{Plugins}{$pluginName}{PloticusCmd} ) {
+
         # throw error, do not init
         logWarning(
             "$pluginName cant find Ploticus (pl) - Try running configure");
         return 0;
     }
-    
+
     # On Windows, the EasyTimeline script will produce a gif, not a png
-    if( $Foswiki::cfg{OS} eq 'WINDOWS' ){
+    if ( $Foswiki::cfg{OS} eq 'WINDOWS' ) {
         $png_or_gif = 'gif';
-    } else {
+    }
+    else {
         $png_or_gif = 'png';
     }
 
     # Plugin correctly initialized
     writeDebug(
         "- Foswiki::Plugins::${pluginName}::initPlugin( $web.$topic ) is OK");
-    
+
     return 1;
 }
 
@@ -78,23 +82,26 @@ sub initPlugin {
 sub commonTagsHandler {
 ### my ( $text, $topic, $web ) = @_;   # do not uncomment, use $_[0], $_[1]... instead
 
-    Foswiki::Func::writeDebug("- ${pluginName}::commonTagsHandler( $_[2].$_[1] )")
+    Foswiki::Func::writeDebug(
+        "- ${pluginName}::commonTagsHandler( $_[2].$_[1] )")
       if $Foswiki::cfg{Plugins}{$pluginName}{Debug};
 
-    # Old syntax, using <easytimeline>.....</easytimeline>
-    #$_[0] =~ s/<easytimeline>(.*?)<\/easytimeline>/&handleTimeline($1, $_[2], $_[1])/giseo;
-    
+# Old syntax, using <easytimeline>.....</easytimeline>
+#$_[0] =~ s/<easytimeline>(.*?)<\/easytimeline>/&handleTimeline($1, $_[2], $_[1])/giseo;
+
     # New syntax, using %TIMELINE%.....%ENDTIMELINE%
-    $_[0] =~ s/%TIMELINE%\s*(.*?)%ENDTIMELINE%/&handleTimeline($1, $_[2], $_[1])/egs;
+    $_[0] =~
+      s/%TIMELINE%\s*(.*?)%ENDTIMELINE%/&handleTimeline($1, $_[2], $_[1])/egs;
 }
 
 # =========================
 sub handleTimeline {
-    
-    my( $text, $web, $topic ) = @_;
-    
-    my $tmpDir  = Foswiki::Func::getWorkArea( $pluginName ) . '/tmp/' . $pluginName . "$$";
-    my $tmpFile = $tmpDir . '/' . $pluginName . "$$";
+
+    my ( $text, $web, $topic ) = @_;
+
+    my $tmpDir =
+      Foswiki::Func::getWorkArea($pluginName) . '/tmp/' . $pluginName . "$$";
+    my $tmpFile             = $tmpDir . '/' . $pluginName . "$$";
     my %hashed_math_strings = ();
 
     # Create topic directory "pub/$web/$topic" if needed
@@ -102,8 +109,7 @@ sub handleTimeline {
     unless ( -e "$dir" ) {
         umask( oct(777) - $Foswiki::cfg{RCS}{dirPermission} );
         mkpath( $dir, 0, 0755 )
-          or return
-          "!$pluginName Error: *folder $dir could not be created*";
+          or return "!$pluginName Error: *folder $dir could not be created*";
     }
 
     # compute the MD5 hash of this string
@@ -125,12 +131,14 @@ sub handleTimeline {
         unless ( -e "$tmpDir" ) {
             umask( oct(777) - $Foswiki::cfg{RCS}{dirPermission} );
             mkpath( $tmpDir, 0, 0755 )
-              or return "!$pluginName Error: *tmp folder $tmpDir could not be created*";
+              or return
+              "!$pluginName Error: *tmp folder $tmpDir could not be created*";
         }
 
         # convert links
-        $text =~ s/\[\[([$Foswiki::regex{mixedAlphaNum}\._\:\/-]*)\]\[([$Foswiki::regex{mixedAlphaNum} \/&\._-]*)\]\]/&renderLink($1, $2, $web, $topic)/egs;
-        
+        $text =~
+s/\[\[([$Foswiki::regex{mixedAlphaNum}\._\:\/-]*)\]\[([$Foswiki::regex{mixedAlphaNum} \/&\._-]*)\]\]/&renderLink($1, $2, $web, $topic)/egs;
+
         # output the timeline text into the tmp file
         open OUTFILE, '>', "$tmpFile.txt"
           or return "!$pluginName Error: could not create file";
@@ -138,13 +146,15 @@ sub handleTimeline {
         close OUTFILE;
 
         # run the command and create the image
-        my $cmd =
-            'perl ' .
-            $Foswiki::cfg{Plugins}{$pluginName}{EasyTimelineScript} . # /var/www/html/foswiki/tools/EasyTimeline.pl
-            ' -i %INFILE|F% -m -P ' .
-            $Foswiki::cfg{Plugins}{$pluginName}{PloticusCmd} . # /usr/local/bin/pl
-            ' -T %TMPDIR|F% -A ' .
-            $Foswiki::cfg{ScriptUrlPath} . 'view' . $Foswiki::cfg{ScriptSuffix}; # /bin/view/
+        my $cmd = 'perl '
+          . $Foswiki::cfg{Plugins}{$pluginName}{EasyTimelineScript}
+          .    # /var/www/html/foswiki/tools/EasyTimeline.pl
+          ' -i %INFILE|F% -m -P '
+          . $Foswiki::cfg{Plugins}{$pluginName}{PloticusCmd}
+          .    # /usr/local/bin/pl
+          ' -T %TMPDIR|F% -A '
+          . $Foswiki::cfg{ScriptUrlPath} . 'view'
+          . $Foswiki::cfg{ScriptSuffix};    # /bin/view/
         writeDebug("Command: $cmd");
         my ( $output, $status ) = Foswiki::Sandbox->sysCommand(
             $cmd,
@@ -153,10 +163,10 @@ sub handleTimeline {
         );
         writeDebug("$pluginName: output $output status $status");
         if ($status) {
-            
+
             my @errLines;
             cleanTmp($tmpDir) unless $Foswiki::cfg{Plugins}{$pluginName}{Debug};
-            
+
             return showError( $status, $output,
                 $hashed_math_strings{"$hash_code"} );
         }
@@ -197,14 +207,14 @@ sub handleTimeline {
                     file     => "$tmpFile.map",
                     filesize => $stats[7],
                     filedate => $stats[9],
-                    comment  =>
-                      "!$pluginName: Timeline clientside map file",
-                    hide    => 1,
-                    dontlog => 1
+                    comment  => "!$pluginName: Timeline clientside map file",
+                    hide     => 1,
+                    dontlog  => 1
                 }
             );
 
         }
+
         # Clean up temporary files
         cleanTmp($tmpDir) unless $Foswiki::cfg{Plugins}{$pluginName}{Debug};
     }
@@ -238,14 +248,18 @@ sub handleTimeline {
 # converts Foswiki style links into absolute Mediawiki style links that work with the EasyTimelne.pl script
 # SMELL: Why are $web and $topic not used?
 sub renderLink {
+
     # [[$link][$title]]
-    my ($link, $title, $web, $topic) = @_;
-    
-    if( $link =~ m!^http://! ){
-        return "[[$link|$title]]"
-    } else {
-        my ( $linkedWeb, $linkedTopic ) = Foswiki::Func::normalizeWebTopicName( '', $link );
-        my $url = Foswiki::Func::getScriptUrl( $linkedWeb, $linkedTopic, 'view' );
+    my ( $link, $title, $web, $topic ) = @_;
+
+    if ( $link =~ m!^http://! ) {
+        return "[[$link|$title]]";
+    }
+    else {
+        my ( $linkedWeb, $linkedTopic ) =
+          Foswiki::Func::normalizeWebTopicName( '', $link );
+        my $url =
+          Foswiki::Func::getScriptUrl( $linkedWeb, $linkedTopic, 'view' );
         return "[[$url|$title]]";
     }
 }
@@ -255,19 +269,20 @@ sub cleanTmp {
     my $dir = shift;
 
     my $untaint_dir = Foswiki::Sandbox::untaint( $dir, \&untaintPath );
-    unless( $untaint_dir ){
+    unless ($untaint_dir) {
         logWarning("Couldn't untaint $dir");
         return;
     }
     opendir( DIR, $untaint_dir );
     my @files = readdir(DIR);
     while ( my $file = pop @files ) {
-        my $rmfile = Foswiki::Sandbox::untaint( "$untaint_dir/$file", \&untaintPath );
-        unless( $rmfile ){
-            logWarning("Couldn't untaint $file" );
+        my $rmfile =
+          Foswiki::Sandbox::untaint( "$untaint_dir/$file", \&untaintPath );
+        unless ($rmfile) {
+            logWarning("Couldn't untaint $file");
             return;
         }
-        
+
         if ( -f $rmfile ) {
             unlink($rmfile);
         }
@@ -292,11 +307,13 @@ sub showError {
     my $line = 1;
     $text =~ s/\n/sprintf("\n%02d: ", $line++)/ges;
     $output .= "<pre>$text\n</pre>";
-    return "<noautolink><span class='foswikiAlert'>!$pluginName Error ($status): $output</span></noautolink>";
+    return
+"<noautolink><span class='foswikiAlert'>!$pluginName Error ($status): $output</span></noautolink>";
 }
 
 sub writeDebug {
-    Foswiki::Func::writeDebug( "$pluginName - " . $_[0] ) if $Foswiki::cfg{Plugins}{$pluginName}{Debug};
+    Foswiki::Func::writeDebug( "$pluginName - " . $_[0] )
+      if $Foswiki::cfg{Plugins}{$pluginName}{Debug};
 }
 
 sub logWarning {

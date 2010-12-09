@@ -7,23 +7,25 @@
 use strict;
 use File::Find::Rule;
 
-my @subdirs = File::Find::Rule->directory->in( '.' );
+my @subdirs = File::Find::Rule->directory->in('.');
 
 foreach my $dir (@subdirs) {
-    next if ($dir =~ m/^_|^\.|^Trash$/);
-    # open dir, loop through files, open files with .txt$, search for syntax, output if found
-    opendir( DIR, $dir) or die "can't opendir: $!";
+    next if ( $dir =~ m/^_|^\.|^Trash$/ );
+
+# open dir, loop through files, open files with .txt$, search for syntax, output if found
+    opendir( DIR, $dir ) or die "can't opendir: $!";
     my $filename;
-    while( defined ( $filename = readdir ( DIR ) ) ) {
-        if( $filename =~ /.*\.txt$/ ) {
+    while ( defined( $filename = readdir(DIR) ) ) {
+        if ( $filename =~ /.*\.txt$/ ) {
 
             open INFILE, "<", "$dir/$filename" or print "$! $filename\n";
             my $file;
-            while( <INFILE> ) {
+            while (<INFILE>) {
                 $file .= $_;
             }
             close INFILE;
-            $file =~ s/<easytimeline>(.*?)<\/easytimeline>/%TIMELINE%\n$1%ENDTIMELINE%/mgos;
+            $file =~
+s/<easytimeline>(.*?)<\/easytimeline>/%TIMELINE%\n$1%ENDTIMELINE%/mgos;
             open OUTFILE, ">", "$dir/$filename" or print "$! $filename\n";
             print OUTFILE $file;
             close OUTFILE;

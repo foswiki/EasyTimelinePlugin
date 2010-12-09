@@ -3,15 +3,15 @@
 # Build for EasyTimelinePlugin
 #
 BEGIN {
-  foreach my $pc (split(/:/, $ENV{FOSWIKI_LIBS})) {
-    unshift @INC, $pc;
-  }
+    foreach my $pc ( split( /:/, $ENV{FOSWIKI_LIBS} ) ) {
+        unshift @INC, $pc;
+    }
 }
 
 use Foswiki::Contrib::Build;
 
 # Create the build object
-$build = new Foswiki::Contrib::Build( 'EasyTimelinePlugin' );
+$build = new Foswiki::Contrib::Build('EasyTimelinePlugin');
 
 # (Optional) Set the details of the repository for uploads.
 # This can be any web on any accessible Foswiki installation.
@@ -20,13 +20,16 @@ $build = new Foswiki::Contrib::Build( 'EasyTimelinePlugin' );
 
 # name of web to upload to
 $build->{UPLOADTARGETWEB} = 'Extensions';
+
 # Full URL of pub directory
 $build->{UPLOADTARGETPUB} = 'http://foswiki.org/pub';
+
 # Full URL of bin directory
 $build->{UPLOADTARGETSCRIPT} = 'http://foswiki.org/bin';
+
 # Script extension
 $build->{UPLOADTARGETSUFFIX} = '';
 
 # Build the target on the command line, or the default target
-$build->build($build->{target});
+$build->build( $build->{target} );
 
