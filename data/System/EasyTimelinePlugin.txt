@@ -23,7 +23,7 @@ Note that sometimes the WYSIWYG editor can break the timelines, by removing whit
 
 ---++ Syntax
 
-<verbatim>
+<verbatim class="tml">
 %TIMELINE%
 Timeline markup
 %ENDTIMELINE%
@@ -74,7 +74,7 @@ PlotData=
 </td>
 <td>
 Verbatim:
-<verbatim>
+<verbatim class="tml">
 %TIMELINE%
 ImageSize = width:270 height:300
 PlotArea  = left:45 right:0 bottom:20 top:20
@@ -111,8 +111,14 @@ An example of multiple parallel timelines. View Raw Text of this topic to see so
 
 <img src="%ATTACHURLPATH%/WindowsVersionsExample.png" alt="WindowsVersionsExample.png" width='800' height='140' />
 
-<!-- Hidden source. Remove the <nop> when using the timeline
-%<nop>TIMELINE%
+%TWISTY{ 
+    showlink="Show source..." 
+    hidelink="Hide" 
+    showimgleft="%ICONURLPATH{toggleopen-small}%" 
+    hideimgleft="%ICONURLPATH{toggleclose-small}%" 
+}%
+<verbatim class="tml">
+%TIMELINE%
 ImageSize = width:800 height:142
 PlotArea  = width:720 height:112 left:65 bottom:25
 AlignBars = justify
@@ -172,7 +178,8 @@ PlotData=
   at:2002.17 text:CE~4.0
   at:2003.67 text:Mobile~2003
 %ENDTIMELINE%
--->
+</verbatim>
+%ENDTWISTY%
 
 ---+++ Binary Logic Example
 
@@ -180,8 +187,14 @@ This plugin might be of help in descriping binary logic execution patterns, as f
 
 <img src="%ATTACHURLPATH%/BinaryLogicExample.png" alt="BinaryLogicExample.png" width='400' height='63' />
 
-<!-- Hidden source. Remove the <nop> when using the timeline
-%<nop>TIMELINE%
+%TWISTY{ 
+    showlink="Show source..." 
+    hidelink="Hide" 
+    showimgleft="%ICONURLPATH{toggleopen-small}%" 
+    hideimgleft="%ICONURLPATH{toggleclose-small}%" 
+}%
+<verbatim class="tml">
+%TIMELINE%
 ImageSize  = width:400 height:60
 PlotArea   = left:30 bottom:30 top:0 right:20
 DateFormat = x.y
@@ -203,7 +216,8 @@ PlotData=
   from:4 till:5
   from:10 till:15
 %ENDTIMELINE%
--->
+</verbatim>
+%ENDTWISTY%
 
 ---+++ UNIX Versions Example
 
@@ -213,8 +227,14 @@ This example also shows how to use hyperlinks in the timeline. Although this onl
 
 <img src="%ATTACHURLPATH%/UNIXVersionsExample.png" alt="UNIXVersionsExample.png" width='606' height='550' />
 
-<!-- Hidden source. Remove the <nop> when using the timeline
-%<nop>TIMELINE%
+%TWISTY{ 
+    showlink="Show source..." 
+    hidelink="Hide" 
+    showimgleft="%ICONURLPATH{toggleopen-small}%" 
+    hideimgleft="%ICONURLPATH{toggleclose-small}%" 
+}%
+<verbatim class="tml">
+%TIMELINE%
 ImageSize  = width:600 height:550
 PlotArea   = left:50 right:0 bottom:20 top:10
 
@@ -334,7 +354,8 @@ PlotData=
   at:2004 text:"[[http://en.wikipedia.org/wiki/QNX][QNX]] 6.3"
   at:2005 text:"Darwin 7.8"
 %ENDTIMELINE%
--->
+</verbatim>
+%ENDTWISTY%
 
 ---+++ Kurdistan Workers Party Example
 
@@ -342,8 +363,14 @@ Very condensed timeline. Not taking up much space, but very informative in it's 
 
 <img src="%ATTACHURLPATH%/KurdistanWorkersPartyExample.png" alt="KurdistanWorkersPartyExample.png" width='600' height='69' />
 
-<!-- Hidden source. Remove the <nop> when using the timeline
-%<nop>TIMELINE%
+%TWISTY{ 
+    showlink="Show source..." 
+    hidelink="Hide" 
+    showimgleft="%ICONURLPATH{toggleopen-small}%" 
+    hideimgleft="%ICONURLPATH{toggleclose-small}%" 
+}%
+<verbatim class="tml">
+%TIMELINE%
 ImageSize  = width:600px height:70px
 PlotArea   = width:570px height:20px left:20px bottom:20px
 AlignBars  = late
@@ -394,7 +421,8 @@ PlotData =
     from:01/01/1996 till:01/04/1999 $broad    $center1   color:blue         textcolor:blue        text:Undecleared War
     from:01/08/1998 till:01/04/1999 $large    $center0   color:red          textcolor:red         text:Capture
 %ENDTIMELINE%
--->
+</verbatim>
+%ENDTWISTY%
 
 ---+++ New Kingdom Example
 
@@ -404,8 +432,14 @@ Btw: There's no hinderance to having the bars overlap if wanted. (I guess that's
 
 <img src="%ATTACHURLPATH%/NewKingdomExample.png" alt="NewKingdomExample.png" width='800' height='435' />
 
-<!-- Hidden source. Remove the <nop> when using the timeline
-%<nop>TIMELINE%
+%TWISTY{ 
+    showlink="Show source..." 
+    hidelink="Hide" 
+    showimgleft="%ICONURLPATH{toggleopen-small}%" 
+    hideimgleft="%ICONURLPATH{toggleclose-small}%" 
+}%
+<verbatim class="tml">
+%TIMELINE%
 ImageSize = width:800 height:auto barincrement:12
 PlotArea  = top:10 bottom:30 right:130 left:20
 AlignBars  = justify
@@ -476,7 +510,8 @@ PlotData=
 
   barset:skip
 %ENDTIMELINE%
--->
+</verbatim>
+%ENDTWISTY%
 
 ---+++ Freeciv Timeline Example
 
@@ -484,8 +519,14 @@ Very spartanic look, only a few colours used. View Raw Text of this topic to see
 
 <img src="%ATTACHURLPATH%/FreecivTimelineExample.png" alt="FreecivTimelineExample.png" width='800' height='109' />
 
-<!-- Hidden source. Remove the <nop> when using the timeline
-%<nop>TIMELINE%
+%TWISTY{ 
+    showlink="Show source..." 
+    hidelink="Hide" 
+    showimgleft="%ICONURLPATH{toggleopen-small}%" 
+    hideimgleft="%ICONURLPATH{toggleclose-small}%" 
+}%
+<verbatim class="tml">
+%TIMELINE%
 ImageSize  = width:800 height:110
 PlotArea   = left:80 right:50 bottom:20 top:10
 AlignBars  = justify
@@ -517,15 +558,23 @@ PlotData=
   bar:Others color:black width:20 mark:(line,red) align:left fontsize:S
   at:05/04/1999 text:" Civilization: Call to Power"
 %ENDTIMELINE%
--->
+</verbatim>
+%ENDTWISTY%
 
 ---+++ Vocal and Instrumental Pitch Ranges
 
 An example on displaying something that is not chronological at all. View Raw Text of this topic to see source.
 
 <img src="%ATTACHURLPATH%/Vocal_and_Instrumental_Pitch_Ranges_Example.png" alt="Vocal_and_Instrumental_Pitch_Ranges_Example.png" width='700' height='1227' />
-<!-- Hidden source. Remove the <nop> when using the timeline
-%<nop>TIMELINE%
+
+%TWISTY{ 
+    showlink="Show source..." 
+    hidelink="Hide" 
+    showimgleft="%ICONURLPATH{toggleopen-small}%" 
+    hideimgleft="%ICONURLPATH{toggleclose-small}%" 
+}%
+<verbatim class="tml">
+%TIMELINE%
 ImageSize  = width:700 height:auto barincrement:17
 PlotArea   = left:0 right:0 top:0 bottom:0
 AlignBars  = justify
@@ -745,7 +794,8 @@ PlotData=
   at:544   text:3000
   at:583   text:4400 Hz
 %ENDTIMELINE%
--->
+</verbatim>
+%ENDTWISTY%
 
 ---+++ Timeline of Conquests of the Ottoman Empire Example
 
@@ -753,8 +803,14 @@ A somewhat dense and graphic timeline; could probably be lightened with good eff
 
 <img src="%ATTACHURLPATH%/Timeline_of_Conquests_of_the_Ottoman_Empire_Example.png" alt="Timeline_of_Conquests_of_the_Ottoman_Empire_Example.png" width='600' height='293' />
 
-<!-- Hidden source. Remove the <nop> when using the timeline
-%<nop>TIMELINE%
+%TWISTY{ 
+    showlink="Show source..." 
+    hidelink="Hide" 
+    showimgleft="%ICONURLPATH{toggleopen-small}%" 
+    hideimgleft="%ICONURLPATH{toggleclose-small}%" 
+}%
+<verbatim class="tml">
+%TIMELINE%
 DateFormat=yyyy
 ImageSize = width:600 height:auto barincrement:12
 Period = from:1299 till:1922
@@ -815,7 +871,8 @@ LineData =
 ScaleMajor = gridcolor:line unit:year increment:100 start:1400
 ScaleMinor = gridcolor:liteline unit:year increment:20 start:1300
 %ENDTIMELINE%
--->
+</verbatim>
+%ENDTWISTY%
 
 ---++ Coming from TWiki?
 
@@ -829,7 +886,7 @@ If you are coming from the TWiki version of this plugin you will need to be awar
 
 However, this syntax can cause problems when using a WYSIWYG editor and is different than the standard %<nop>MACRO% syntax. Therefore the syntax has been changed in this version to:
 
-<verbatim>
+<verbatim class="tml">
 %TIMELINE%
 ...
 %ENDTIMELINE%
@@ -845,13 +902,11 @@ Once you have installed the plugin you should visit =configure= and check that t
 
 ---++ Diagnostics
 
-If you are having problems with this plugin, you can turn on the =Debug= flag in =configure=. The plugin will then print debug information to your =debug.txt= log file, and will also save a number of temporary files in your =work_areas/EasyTimelinePlugin/tmp= directory.
+You should first check that the paths to =ploticus= and the =EasyTimeline.pl= scripts are correct in =configure=. If they are not, =configure= should display an error message to warn you.
 
-Things to look for the in the debug log include:
-   * Warnings that it could not find the =ploticus= command
-   * Warnings that it could not find the =EasyTimeline.pl= script
+If you are still having problems, you can enable the =Debug= flag in =configure=. The plugin will then print debug information to your =debug.txt= log file, and will also save a number of temporary files in your =work_areas/EasyTimelinePlugin/tmp= directory.
 
-You should also check your =warnings.txt= log file, and InstalledPlugins for more information.
+You should also check your =warnings.txt= log file, and %SYSTEMWEB%.InstalledPlugins for more information.
 
 ---++ Plugin Info
 
@@ -862,6 +917,7 @@ You should also check your =warnings.txt= log file, and InstalledPlugins for mor
 |  Plugin Release: | %$RELEASE% |
 |  Plugin Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  10 Dec 2010  | v1.4 - Foswiki:Tasks.Item10141 - Provide warnings in =configure= when the path's to the scripts are incorrect; Doc updates - Foswiki:Main.AndrewJones |
 |  09 Dec 2010  | v1.3 - Foswiki:Tasks.Item10114 - Fixes for Windows; Foswiki:Tasks.Item9927 - =umask= fixes - Foswiki:Main.AndrewJones |
 |  11 Feb 2010  | v1.2 - Foswiki:Tasks.Item8484 - Missing screenshot; Foswiki:Tasks.Item8487 - Set NOWYSIWYG for plugin topic; Foswiki:Tasks.Item8488 - Update =pl= dependency. Thanks to Foswiki:Main.BryanThale. - Foswiki:Main.AndrewJones |
 |  22 Oct 2009  | v1.1 - Foswiki:Tasks.Item2278 - Fix hyperlinks and upgrade docs - Foswiki:Main.AndrewJones |
@@ -872,6 +928,11 @@ You should also check your =warnings.txt= log file, and InstalledPlugins for mor
 |  Dependencies: | %$DEPENDENCIES% |
 |  Plugin Home: | http://foswiki.org/Extensions/%TOPIC% |
 |  Support: | http://foswiki.org/Support/%TOPIC% |
+
+<!--
+For syntax highlighting, if installed
+%JQREQUIRE{"chili"}%
+-->
 
 
 %META:FILEATTACHMENT{name="IcelandicHeritageExample.png" attr="h" autoattached="1" comment="Icelandic Heritage Example" date="1145658157" path="IcelandicHeritageExample.png" size="2012" user="Main.ProjectContributor" version="1"}%

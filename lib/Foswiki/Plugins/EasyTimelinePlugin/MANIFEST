@@ -1,6 +1,8 @@
 data/System/EasyTimelinePlugin.txt Documentation Topic
 lib/Foswiki/Plugins/EasyTimelinePlugin.pm Plugin Perl Module
 lib/Foswiki/Plugins/EasyTimelinePlugin/Config.spec Configuration Items
+lib/Foswiki/Configure/Checkers/Plugins/EasyTimelinePlugin/PloticusCmd.pm Configure checker
+lib/Foswiki/Configure/Checkers/Plugins/EasyTimelinePlugin/EasyTimelineScript.pm Configure checker
 pub/System/EasyTimelinePlugin/BinaryLogicExample.png Example rendered image
 pub/System/EasyTimelinePlugin/FreecivTimelineExample.png Example rendered image
 pub/System/EasyTimelinePlugin/IcelandicHeritageExample.png Example rendered image
@@ -10,5 +12,5 @@ pub/System/EasyTimelinePlugin/Timeline_of_Conquests_of_the_Ottoman_Empire_Exampl
 pub/System/EasyTimelinePlugin/UNIXVersionsExample.png Example rendered image
 pub/System/EasyTimelinePlugin/Vocal_and_Instrumental_Pitch_Ranges_Example.png Example rendered image
 pub/System/EasyTimelinePlugin/WindowsVersionsExample.png Example rendered image
-tools/EasyTimeline.pl 0554 Script to create the timeline images
-tools/EasyTimelinePlugin_convert.pl 0554 Script to convert old syntax to new
+tools/EasyTimeline.pl 0755 Script to create the timeline images
+tools/EasyTimelinePlugin_convert.pl 0755 Script to convert old syntax to new
