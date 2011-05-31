@@ -357,11 +357,11 @@ PlotData=
 </verbatim>
 %ENDTWISTY%
 
----+++ Kurdistan Workers Party Example
+---+++ Life On Earth Example
 
 Very condensed timeline. Not taking up much space, but very informative in it's layered telling. View Raw Text of this topic to see source.
 
-<img src="%ATTACHURLPATH%/KurdistanWorkersPartyExample.png" alt="KurdistanWorkersPartyExample.png" width='600' height='69' />
+<img src="%ATTACHURLPATH%/LifeOnEarthExample.png" alt="LifeOnEarthExample.png" width='600' height='70' />
 
 %TWISTY{ 
     showlink="Show source..." 
@@ -370,57 +370,51 @@ Very condensed timeline. Not taking up much space, but very informative in it's 
     hideimgleft="%ICONURLPATH{toggleclose-small}%" 
 }%
 <verbatim class="tml">
-%TIMELINE%
-ImageSize  = width:600px height:70px
-PlotArea   = width:570px height:20px left:20px bottom:20px
-AlignBars  = late
-DateFormat = dd/mm/yyyy
-Period     = from:01/01/1968 till:01/01/2006
-TimeAxis   = orientation:horizontal
-BarData =
-  bar:apo
-
-Colors =
-  id:grid1  value:rgb(0.4,0.6,0.4)                    # major grid
-  id:grid2  value:rgb(0.80,0.80,1)                     # minor grid
-  id:canvas   value:gray(0.95)                     # background for whole image
-  id:barcol   value:gray(0.85)                     # background for bars
-  id:gray   value:gray(0.6)                        # for colophon
-
-ScaleMajor  = gridcolor:grid1 unit:year increment:5 start:01/01/1970
-ScaleMinor  = gridcolor:grid2 unit:year increment:1 start:01/01/1968
-
-BackgroundColors = canvas:canvas bars:barcol
-
-Define $center0   = align:center   shift:(  0, 14)
-Define $center2   = align:center   shift:(  -18, 14)
-Define $center1   = align:center   shift:(  0, 24)
-Define $large     = width:0.15in
-Define $broad     = width:0.11in
-Define $narrow    = width:0.07in
-Define $small     = width:0.03in
-TextData =
-   fontsize:L
-   textcolor:ORANGE
-   pos:(10,65)
-   text:"Life Time"
-LineData=
-  at:12/09/1980    color:purple width:1px
-  at:15/02/1999    color:purple width:1px
-PlotData =
-     fontsize:S width:0.15in align:center
- bar:apo
-    from:start till:12/09/1980      $narrow   $center1   color:lightorange  textcolor:lightorange text:Origins
-    from:01/04/1973 till:27/10/1978 $small    $center0   color:drabgreen    textcolor:drabgreen   text:APOcus
-    from:27/10/1978 till:12/09/1980 $small    $center0   color:teal         textcolor:teal        text:Urban
-    from:12/09/1980 till:15/07/1984 $small    $center0   color:green        textcolor:green       text:Syria
-    from:15/07/1984 till:17/03/1993 $small    $center0   color:brightgreen  textcolor:brightgreen text:Gerilla
-    from:08/06/1993 till:15/12/1995 $small    $center0   color:brightgreen
-    from:16/08/1996 till:02/07/1999 $small    $center0   color:brightgreen            
-    from:01/12/1984 till:end        $narrow   $center2   color:pink         textcolor:pink        text:Vacuum at N-Iraq
-    from:01/01/1996 till:01/04/1999 $broad    $center1   color:blue         textcolor:blue        text:Undecleared War
-    from:01/08/1998 till:01/04/1999 $large    $center0   color:red          textcolor:red         text:Capture
-%ENDTIMELINE%
+%TIMELINE% 
+# Source: http://en.wikipedia.org/wiki/Timeline_of_evolution
+ImageSize  = width:600px height:70px 
+PlotArea   = width:570px height:20px left:20px bottom:20px 
+AlignBars  = late 
+DateFormat = yyyy 
+Period     = from:-4500 till:0 
+TimeAxis   = orientation:horizontal 
+BarData = 
+  bar:apo 
+ 
+Colors = 
+  id:grid1  value:rgb(0.4,0.6,0.4)                    # major grid 
+  id:grid2  value:rgb(0.80,0.80,1)                     # minor grid 
+  id:canvas   value:gray(0.95)                     # background for whole image 
+  id:barcol   value:gray(0.85)                     # background for bars 
+  id:gray   value:gray(0.6)                        # for colophon 
+ 
+ScaleMajor  = gridcolor:grid1 unit:year increment:500 start:-4500 
+ 
+BackgroundColors = canvas:canvas bars:barcol 
+ 
+Define $center0   = align:center   shift:(  0, 14) 
+Define $center2   = align:center   shift:(  -18, 14) 
+Define $center1   = align:center   shift:(  0, 24) 
+Define $large     = width:0.15in 
+Define $broad     = width:0.11in 
+Define $narrow    = width:0.07in 
+Define $small     = width:0.03in 
+TextData = 
+   fontsize:L 
+   textcolor:ORANGE 
+   pos:(10,65) 
+   text:"Life on Earth" 
+PlotData = 
+     fontsize:S width:0.15in align:center 
+ bar:apo 
+    from:start till:-4000      $large   $center1   color:lightorange  textcolor:lightorange text:Formation
+    from:-4000 till:-3000      $large   $center0   color:drabgreen    textcolor:drabgreen text:Life
+    from:-3000 till:-2000       $large    $center0   color:drabgreen    textcolor:drabgreen   text:Photosynthesis 
+    from:-2000 till:end       $large    $center1   color:teal         textcolor:teal        text:Eukaryotes 
+    from:-1500 till:end       $broad    $center2   color:green        textcolor:green        text:Multicellular life 
+    from:-300 till:-100       $narrow    $center1   color:blue         textcolor:blue        text:Dinosaurs 
+    from:-250 till:end       $small    $center2   color:red         textcolor:red        text:Mammals 
+%ENDTIMELINE% 
 </verbatim>
 %ENDTWISTY%
 
@@ -912,11 +906,12 @@ You should also check your =warnings.txt= log file, and %SYSTEMWEB%.InstalledPlu
 
 |  Plugin Author(s): | Foswiki:Main.AndrewJones |
 |  Previous Author(s): | Foswiki:Main.SteffenPoulsen, TWiki:Main.MikeMarion |
-|  Copyright: | &copy; 2009 - 2010, Andrew Jones, &copy; 2006, Mike Marion |
+|  Copyright: | &copy; 2009 - 2011, Andrew Jones, &copy; 2006, Mike Marion |
 |  License: | [[http://www.gnu.org/licenses/gpl.html][GPL (Gnu General Public License)]] |
 |  Plugin Release: | %$RELEASE% |
 |  Plugin Version: | %$VERSION% |
 |  Change History: | <!-- versions below in reverse order -->&nbsp; |
+|  31 May 2011  | Foswiki:Tasks.Item10812: Replace potentially offensive example - Foswiki:Main.AndrewJones |
 |  10 Dec 2010  | v1.4 - Foswiki:Tasks.Item10141 - Provide warnings in =configure= when the path's to the scripts are incorrect; Doc updates - Foswiki:Main.AndrewJones |
 |  09 Dec 2010  | v1.3 - Foswiki:Tasks.Item10114 - Fixes for Windows; Foswiki:Tasks.Item9927 - =umask= fixes - Foswiki:Main.AndrewJones |
 |  11 Feb 2010  | v1.2 - Foswiki:Tasks.Item8484 - Missing screenshot; Foswiki:Tasks.Item8487 - Set NOWYSIWYG for plugin topic; Foswiki:Tasks.Item8488 - Update =pl= dependency. Thanks to Foswiki:Main.BryanThale. - Foswiki:Main.AndrewJones |
@@ -941,6 +936,6 @@ For syntax highlighting, if installed
 %META:FILEATTACHMENT{name="KurdistanWorkersPartyExample.png" attr="h" autoattached="1" comment="Kurdistan Workers Party Example" date="1145658236" path="KurdistanWorkersPartyExample.png" size="1442" user="Main.ProjectContributor" version="1"}%
 %META:FILEATTACHMENT{name="FreecivTimelineExample.png" attr="h" autoattached="1" comment="Freeciv Timeline Example" date="1145658275" path="FreecivTimelineExample.png" size="1777" user="Main.ProjectContributor" version="1"}%
 %META:FILEATTACHMENT{name="BinaryLogicExample.png" attr="h" autoattached="1" comment="Binary Logic Example" date="1145658197" path="BinaryLogicExample.png" size="493" user="Main.ProjectContributor" version="1"}%
-%META:FILEATTACHMENT{name="NewKingdomExample.png" attr="h" autoattached="1" comment="New Kingdom Example" date="1145658255" path="NewKingdomExample.png" size="4963" user="Main.ProjectContributor" version="1"}%
+%META:FILEATTACHMENT{name="LifeOnEarthExample.png" attr="h" autoattached="1" comment="Life On Earth Example" date="1145658255" path="LifeOnEarthExample.png" size="4963" user="Main.ProjectContributor" version="1"}%
 %META:FILEATTACHMENT{name="WindowsVersionsExample.png" attr="h" autoattached="1" comment="Windows Versions Example" date="1145658178" path="WindowsVersionsExample.png" size="2682" user="Main.ProjectContributor" version="1"}%
 %META:FILEATTACHMENT{name="Timeline_of_Conquests_of_the_Ottoman_Empire_Example.png" attr="h" autoattached="1" comment="Timeline of Conquests of the Ottoman Empire Example" date="1145658328" path="Timeline_of_Conquests_of_the_Ottoman_Empire_Example.png" size="3565" user="Main.ProjectContributor" version="1"}%
